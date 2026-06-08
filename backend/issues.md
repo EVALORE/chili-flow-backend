@@ -4,18 +4,18 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 
 ## Recommended Order
 
-1. `[backend] Project foundation`
-2. `[backend] Database and data model`
-3. `[backend] Auth and users`
-4. `[backend] Uploaded tracks`
-5. `[backend] Jamendo read API`
-6. `[backend] Playlists`
-7. `[backend] Recently played`
-8. `[backend] Testing, docs, and production hardening`
+1. `[backend] Project foundation` - In Progress
+2. `[backend] Database and data model` - Done
+3. `[backend] Auth and users` - Not Started
+4. `[backend] Uploaded tracks` - Not Started
+5. `[backend] Jamendo read API` - In Progress
+6. `[backend] Playlists` - Not Started
+7. `[backend] Recently played` - Not Started
+8. `[backend] Testing, docs, and production hardening` - Not Started
 
 ---
 
-## name: [backend] Project foundation
+## name: [backend] Project foundation - In Progress
 
 ### Goal
 
@@ -41,7 +41,7 @@ Prepare the NestJS backend foundation used by every feature module.
 
 ### Sub-issues
 
-#### name: [backend] Config and environment validation
+#### name: [backend] Config and environment validation - In Progress
 
 Goal
 
@@ -67,7 +67,7 @@ Acceptance Criteria
 - Optional Jamendo OAuth variables do not block read-only Jamendo features.
 - Defaults are used only for safe local development values.
 
-#### name: [backend] Common API infrastructure
+#### name: [backend] Common API infrastructure - Not Started
 
 Goal
 
@@ -87,7 +87,7 @@ Acceptance Criteria
 - API errors return a consistent response shape.
 - Feature modules do not duplicate common request/user types.
 
-#### name: [backend] Health check endpoint
+#### name: [backend] Health check endpoint - Not Started
 
 Goal
 
@@ -106,7 +106,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Database and data model
+## name: [backend] Database and data model - Done
 
 ### Goal
 
@@ -129,7 +129,7 @@ Add database persistence for users, uploaded tracks, playlists, playlist tracks,
 
 ### Sub-issues
 
-#### name: [backend] Add database module
+#### name: [backend] Add database module - Done
 
 Goal
 
@@ -148,7 +148,7 @@ Acceptance Criteria
 - App starts only when the database connection is valid.
 - Feature modules can inject the database service.
 
-#### name: [backend] Create initial schema
+#### name: [backend] Create initial schema - Done
 
 Goal
 
@@ -171,7 +171,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Auth and users
+## name: [backend] Auth and users - Not Started
 
 ### Goal
 
@@ -199,7 +199,7 @@ Allow users to register, log in, and access protected backend resources with JWT
 
 ### Sub-issues
 
-#### name: [backend] Users module
+#### name: [backend] Users module - Not Started
 
 Goal
 
@@ -221,7 +221,7 @@ Acceptance Criteria
 - Auth can create and look up users through `UsersModule`.
 - API responses never include password hashes.
 
-#### name: [backend] Register endpoint
+#### name: [backend] Register endpoint - Not Started
 
 Goal
 
@@ -242,7 +242,7 @@ Acceptance Criteria
 - Duplicate email returns a conflict error.
 - Password is stored only as a hash.
 
-#### name: [backend] Login endpoint
+#### name: [backend] Login endpoint - Not Started
 
 Goal
 
@@ -262,7 +262,7 @@ Acceptance Criteria
 - Invalid credentials do not reveal whether the email exists.
 - Returned user object does not include password hash.
 
-#### name: [backend] JWT protection
+#### name: [backend] JWT protection - Not Started
 
 Goal
 
@@ -284,7 +284,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Uploaded tracks
+## name: [backend] Uploaded tracks - Not Started
 
 ### Goal
 
@@ -313,7 +313,7 @@ Allow authenticated users to upload, list, play, and delete their own audio trac
 
 ### Sub-issues
 
-#### name: [backend] Track upload endpoint
+#### name: [backend] Track upload endpoint - Not Started
 
 Goal
 
@@ -338,7 +338,7 @@ Acceptance Criteria
 - Missing required metadata returns validation error.
 - Non-audio files are rejected.
 
-#### name: [backend] Uploaded track listing
+#### name: [backend] Uploaded track listing - Not Started
 
 Goal
 
@@ -357,7 +357,7 @@ Acceptance Criteria
 - User sees only their own uploaded tracks.
 - Response has enough data for Library and player UI.
 
-#### name: [backend] Uploaded track deletion
+#### name: [backend] Uploaded track deletion - Not Started
 
 Goal
 
@@ -378,7 +378,7 @@ Acceptance Criteria
 - User cannot delete another user's track.
 - Stored file is removed after deletion.
 
-#### name: [backend] Public uploaded media URLs
+#### name: [backend] Public uploaded media URLs - Not Started
 
 Goal
 
@@ -398,7 +398,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Jamendo read API
+## name: [backend] Jamendo read API - In Progress
 
 ### Goal
 
@@ -429,7 +429,7 @@ Expose app-focused Jamendo routes for search, browsing, artist pages, album page
 
 ### Sub-issues
 
-#### name: [backend] Jamendo client hardening
+#### name: [backend] Jamendo client hardening - In Progress
 
 Goal
 
@@ -451,7 +451,7 @@ Acceptance Criteria
 - Upstream response parsing is tested.
 - The frontend never needs to know Jamendo client credentials.
 
-#### name: [backend] Search Jamendo tracks
+#### name: [backend] Search Jamendo tracks - Done
 
 Goal
 
@@ -471,7 +471,7 @@ Acceptance Criteria
 - Invalid query params return validation errors.
 - Limit cannot exceed Jamendo's documented maximum.
 
-#### name: [backend] Jamendo track details
+#### name: [backend] Jamendo track details - Done
 
 Goal
 
@@ -489,7 +489,7 @@ Acceptance Criteria
 - Track detail page can load one track by ID.
 - Similar tracks list can be shown by the frontend.
 
-#### name: [backend] Jamendo track file redirect
+#### name: [backend] Jamendo track file redirect - Not Started
 
 Goal
 
@@ -508,7 +508,7 @@ Acceptance Criteria
 - Frontend can request a track file through the backend route.
 - Backend does not offer downloads when Jamendo disallows them.
 
-#### name: [backend] Jamendo albums
+#### name: [backend] Jamendo albums - Not Started
 
 Goal
 
@@ -527,7 +527,7 @@ Acceptance Criteria
 - Album list can be rendered by the frontend.
 - Album page can render tracks for one album.
 
-#### name: [backend] Jamendo artists
+#### name: [backend] Jamendo artists - Not Started
 
 Goal
 
@@ -547,7 +547,7 @@ Acceptance Criteria
 - Artist page can show popular tracks.
 - Artist page can show albums with cover, title, release date, and track count.
 
-#### name: [backend] Jamendo autocomplete
+#### name: [backend] Jamendo autocomplete - Not Started
 
 Goal
 
@@ -565,7 +565,7 @@ Acceptance Criteria
 - Search UI can request suggestions while typing.
 - Empty or invalid prefix returns a validation error or empty result consistently.
 
-#### name: [backend] Jamendo public playlists
+#### name: [backend] Jamendo public playlists - Not Started
 
 Goal
 
@@ -585,7 +585,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Playlists
+## name: [backend] Playlists - Not Started
 
 ### Goal
 
@@ -614,7 +614,7 @@ Store and manage user-owned playlists with both Jamendo tracks and uploaded trac
 
 ### Sub-issues
 
-#### name: [backend] Playlist CRUD
+#### name: [backend] Playlist CRUD - Not Started
 
 Goal
 
@@ -637,7 +637,7 @@ Acceptance Criteria
 - Playlist list includes track count and total duration.
 - Playlist detail includes ordered tracks.
 
-#### name: [backend] Add tracks to playlist
+#### name: [backend] Add tracks to playlist - Not Started
 
 Goal
 
@@ -659,7 +659,7 @@ Acceptance Criteria
 - User can add Jamendo tracks using normalized metadata.
 - Track order remains stable.
 
-#### name: [backend] Remove playlist tracks
+#### name: [backend] Remove playlist tracks - Not Started
 
 Goal
 
@@ -678,7 +678,7 @@ Acceptance Criteria
 - Uploaded track file remains available outside the playlist.
 - Other users' playlists cannot be changed.
 
-#### name: [backend] Reorder playlist tracks
+#### name: [backend] Reorder playlist tracks - Not Started
 
 Goal
 
@@ -700,7 +700,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Recently played
+## name: [backend] Recently played - Not Started
 
 ### Goal
 
@@ -726,7 +726,7 @@ Save and show user listening history.
 
 ### Sub-issues
 
-#### name: [backend] Save recently played item
+#### name: [backend] Save recently played item - Not Started
 
 Goal
 
@@ -748,7 +748,7 @@ Acceptance Criteria
 - Invalid source values are rejected.
 - History item belongs only to the authenticated user.
 
-#### name: [backend] List recently played items
+#### name: [backend] List recently played items - Not Started
 
 Goal
 
@@ -771,7 +771,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Jamendo OAuth and user actions
+## name: [backend] Jamendo OAuth and user actions - Not Started
 
 ### Goal
 
@@ -797,7 +797,7 @@ Support user-specific Jamendo write actions only if the product needs Jamendo li
 
 ### Sub-issues
 
-#### name: [backend] Jamendo OAuth connection
+#### name: [backend] Jamendo OAuth connection - Not Started
 
 Goal
 
@@ -818,7 +818,7 @@ Acceptance Criteria
 - Invalid state is rejected.
 - Tokens are not returned to the frontend.
 
-#### name: [backend] Jamendo user write actions
+#### name: [backend] Jamendo user write actions - Not Started
 
 Goal
 
@@ -843,7 +843,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Testing, docs, and production hardening
+## name: [backend] Testing, docs, and production hardening - Not Started
 
 ### Goal
 
@@ -870,7 +870,7 @@ Make the backend reliable enough for feature integration and deployment.
 
 ### Sub-issues
 
-#### name: [backend] API test coverage
+#### name: [backend] API test coverage - Not Started
 
 Goal
 
@@ -892,7 +892,7 @@ Acceptance Criteria
 - Tests cover success and failure paths for core features.
 - Tests can run locally with one command.
 
-#### name: [backend] Backend documentation
+#### name: [backend] Backend documentation - In Progress
 
 Goal
 
@@ -913,7 +913,7 @@ Acceptance Criteria
 - A new developer can run the backend locally using the docs.
 - Docs do not include real secrets.
 
-#### name: [backend] Rate limiting and caching
+#### name: [backend] Rate limiting and caching - Not Started
 
 Goal
 
@@ -931,7 +931,7 @@ Acceptance Criteria
 - Repeated public Jamendo requests do not overload the upstream API.
 - User-specific responses are not cached globally.
 
-#### name: [backend] Production error handling
+#### name: [backend] Production error handling - Not Started
 
 Goal
 
