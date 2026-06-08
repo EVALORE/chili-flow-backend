@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TrackSource {
+  JAMENDO
+  UPLOADED
+}
+
+model User {
+  id              String           @id @default(uuid())
+  email           String           @unique
+  passwordHash    String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  uploadedTracks  UploadedTrack[]
+  playlists       Playlist[]
+  recentlyPlayeds RecentlyPlayed[]
+}
+
+model UploadedTrack {
+  id        String   @id @default(uuid())
+  ownerId   String
+  title     String
+  artist    String
+  genre     String?
+  filePath  String
+  publicUrl String
+  duration  Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId])
+}
+
+model Playlist {
+  id          String   @id @default(uuid())
+  ownerId     String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner  User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  tracks PlaylistTrack[]
+
+  @@index([ownerId])
+}
+
+model PlaylistTrack {
+  id         String      @id @default(uuid())
+  playlistId String
+  source     TrackSource
+  sourceId   String
+  title      String
+  artist     String
+  coverUrl   String?
+  audioUrl   String?
+  duration   Int? 
+  position   Int
+  addedAt    DateTime    @default(now())
+
+  playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+
+  @@unique([playlistId, position])
+  @@index([playlistId])
+}
+
+model RecentlyPlayed {
+  id       String      @id @default(uuid())
+  ownerId  String
+  source   TrackSource
+  sourceId String
+  title    String
+  artist   String
+  coverUrl String?
+  audioUrl String?
+  duration Int?
+  playedAt DateTime    @default(now())
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId, playedAt])
+}

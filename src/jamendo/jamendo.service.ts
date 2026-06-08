@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JamendoClient } from './jamendo.client';
 import { SearchTRacksQueryDto } from './dto/search-tracks-query.dto';
-import { JamendoTrack } from './Jamendo.types';
+import { JamendoTrack } from './jamendo.types';
 import { mapJamendoTrack } from './jamendo.mapper';
 
 @Injectable()

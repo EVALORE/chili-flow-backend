@@ -3,6 +3,7 @@ import { validateEnv } from './config/env.validation';
 import appConfig from './config/app.config';
 import { ConfigModule } from '@nestjs/config';
 import { JamendoModule } from './jamendo/jamendo.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { JamendoModule } from './jamendo/jamendo.module';
       load: [appConfig],
       validate: validateEnv,
     }),
+    DatabaseModule,
     JamendoModule,
   ],
 })

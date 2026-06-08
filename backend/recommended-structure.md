@@ -24,7 +24,7 @@ Done
   config/
     env.validation.ts
     app.config.ts
-    
+
   common/
     decorators/
       current-user.decorator.ts
@@ -66,6 +66,7 @@ Done
     playlists.service.ts
     dto/
 
+Done
   jamendo/
     jamendo.module.ts
     jamendo.controller.ts
