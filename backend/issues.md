@@ -913,6 +913,28 @@ Acceptance Criteria
 - A new developer can run the backend locally using the docs.
 - Docs do not include real secrets.
 
+#### name: [backend] Swagger OpenAPI setup - Not Started
+
+Goal
+
+Expose interactive API documentation for local development and frontend integration.
+
+Tasks
+
+- Install `@nestjs/swagger`.
+- Configure Swagger in `main.ts`.
+- Add `/docs` route.
+- Add API tags for feature modules.
+- Add DTO decorators for request and response examples.
+- Add JWT bearer auth support.
+- Hide or disable Swagger in production if needed.
+
+Acceptance Criteria
+
+- `GET /docs` opens Swagger UI locally.
+- Auth endpoints and Jamendo endpoints are documented.
+- Protected endpoints show bearer token authentication.
+
 #### name: [backend] Rate limiting and caching - Not Started
 
 Goal
