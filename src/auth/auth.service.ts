@@ -18,7 +18,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(dto: RegisterDto) {
+  async register(dto: RegisterDto): Promise<AuthResponseDto> {
     const email = this._normalizeEmail(dto.email);
 
     const existingUser = await this.usersService.findByEmail(email);
@@ -37,7 +37,7 @@ export class AuthService {
     return this._buildAuthResponse(user);
   }
 
-  async login(dto: LoginDto) {
+  async login(dto: LoginDto): Promise<AuthResponseDto> {
     const email = this._normalizeEmail(dto.email);
     const user = await this.usersService.findByEmail(email);
 
