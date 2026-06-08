@@ -4,6 +4,7 @@ import appConfig from './config/app.config';
 import { ConfigModule } from '@nestjs/config';
 import { JamendoModule } from './jamendo/jamendo.module';
 import { DatabaseModule } from './database/database.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { DatabaseModule } from './database/database.module';
     }),
     DatabaseModule,
     JamendoModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

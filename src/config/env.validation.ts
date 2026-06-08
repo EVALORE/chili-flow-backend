@@ -25,8 +25,7 @@ class EnvironmentVariables {
   PORT?: number;
 
   @IsString()
-  @IsOptional()
-  JWT_SECRET?: string;
+  JWT_SECRET!: string;
 
   @IsString()
   DATABASE_URL!: string;
