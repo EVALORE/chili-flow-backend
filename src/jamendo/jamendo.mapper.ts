@@ -1,4 +1,4 @@
-import { JamendoTrack } from './Jamendo.types';
+import { JamendoTrack } from './jamendo.types';
 
 export function mapJamendoTrack(track: JamendoTrack) {
   return {

@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JamendoResponse } from './Jamendo.types';
+import { JamendoResponse } from './jamendo.types';
 
 @Injectable()
 export class JamendoClient {

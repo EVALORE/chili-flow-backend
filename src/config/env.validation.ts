@@ -29,11 +29,10 @@ class EnvironmentVariables {
   JWT_SECRET?: string;
 
   @IsString()
-  @IsOptional()
-  DATABASE_URL?: string;
+  DATABASE_URL!: string;
 
   @IsString()
-  JAMENDO_CLIENT_ID: string;
+  JAMENDO_CLIENT_ID!: string;
 
   @IsString()
   @IsOptional()

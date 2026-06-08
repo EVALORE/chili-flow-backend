@@ -8,4 +8,7 @@ export default () => ({
     apiBaseUrl:
       process.env.JAMENDO_API_BASE_URL || 'https://api.jamendo.com/v3.0',
   },
+  database: {
+    url: process.env.DATABASE_URL,
+  },
 });
