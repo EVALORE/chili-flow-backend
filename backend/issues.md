@@ -6,7 +6,7 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 
 1. `[backend] Project foundation` - In Progress
 2. `[backend] Database and data model` - Done
-3. `[backend] Auth and users` - Not Started
+3. `[backend] Auth and users` - In Progress
 4. `[backend] Uploaded tracks` - Not Started
 5. `[backend] Jamendo read API` - In Progress
 6. `[backend] Playlists` - Not Started
@@ -171,7 +171,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Auth and users - Not Started
+## name: [backend] Auth and users - In Progress
 
 ### Goal
 
@@ -199,7 +199,7 @@ Allow users to register, log in, and access protected backend resources with JWT
 
 ### Sub-issues
 
-#### name: [backend] Users module - Not Started
+#### name: [backend] Users module - Done
 
 Goal
 
@@ -221,7 +221,7 @@ Acceptance Criteria
 - Auth can create and look up users through `UsersModule`.
 - API responses never include password hashes.
 
-#### name: [backend] Register endpoint - Not Started
+#### name: [backend] Register endpoint - In Progress
 
 Goal
 
@@ -242,7 +242,7 @@ Acceptance Criteria
 - Duplicate email returns a conflict error.
 - Password is stored only as a hash.
 
-#### name: [backend] Login endpoint - Not Started
+#### name: [backend] Login endpoint - Done
 
 Goal
 
@@ -262,7 +262,7 @@ Acceptance Criteria
 - Invalid credentials do not reveal whether the email exists.
 - Returned user object does not include password hash.
 
-#### name: [backend] JWT protection - Not Started
+#### name: [backend] JWT protection - In Progress
 
 Goal
 

@@ -11,4 +11,7 @@ export default () => ({
   database: {
     url: process.env.DATABASE_URL,
   },
+  auth: {
+    jwtSecret: process.env.JWT_SECRET,
+  },
 });
