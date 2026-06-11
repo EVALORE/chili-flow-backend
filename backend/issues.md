@@ -508,7 +508,7 @@ Acceptance Criteria
 - Frontend can request a track file through the backend route.
 - Backend does not offer downloads when Jamendo disallows them.
 
-#### name: [backend] Jamendo albums - Not Started
+#### name: [backend] Jamendo albums - Done
 
 Goal
 

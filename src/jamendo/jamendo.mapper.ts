@@ -1,4 +1,4 @@
-import { JamendoTrack } from './jamendo.types';
+import { JamendoAlbum, JamendoAlbumTrack, JamendoTrack } from './jamendo.types';
 
 export function mapJamendoTrack(track: JamendoTrack) {
   return {
@@ -16,5 +16,49 @@ export function mapJamendoTrack(track: JamendoTrack) {
     shareUrl: track.shareurl,
     licenseUrl: track.license_ccurl || null,
     audiodownloadAllowed: Boolean(track.audiodownload_allowed),
+  };
+}
+
+export function mapJamendoAlbum(album: JamendoAlbum) {
+  return {
+    source: 'jamendo',
+    sourceId: album.id,
+    title: album.name,
+    artist: album.artist_name,
+    artistId: album.artist_id,
+    releaseDate: album.releasedate || null,
+    coverUrl: album.image || null,
+    zipUrl: album.zip_allowed ? album.zip || null : null,
+    shareUrl: album.shareurl || album.shorturl || null,
+    zipAllowed: Boolean(album.zip_allowed),
+    trackCount: null,
+  };
+}
+
+export function mapJamendoAlbumWithTracks(album: JamendoAlbumTrack) {
+  const tracks = album.tracks ?? [];
+
+  return {
+    ...mapJamendoAlbum(album),
+    trackCount: tracks.length,
+    tracks: tracks.map((track) => ({
+      source: 'jamendo',
+      sourceId: track.id,
+      title: track.name,
+      artist: album.artist_name,
+      artistId: album.artist_id,
+      album: album.name,
+      albumId: album.id,
+      position: Number(track.position ?? 0),
+      duration: Number(track.duration),
+      coverUrl: album.image || null,
+      audioUrl: track.audio,
+      downloadUrl: track.audiodownload_allowed
+        ? track.audiodownload || null
+        : null,
+      shareUrl: album.shareurl || null,
+      licenseUrl: track.license_ccurl || null,
+      audiodownloadAllowed: Boolean(track.audiodownload_allowed),
+    })),
   };
 }

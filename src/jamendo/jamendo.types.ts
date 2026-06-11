@@ -25,3 +25,29 @@ export interface JamendoTrack {
   shareurl: string;
   license_ccurl?: string;
 }
+
+export interface JamendoAlbum {
+  id: string;
+  name: string;
+  releasedate?: string;
+  artist_id: string;
+  artist_name: string;
+  image?: string;
+  zip?: string;
+  shorturl?: string;
+  shareurl?: string;
+  zip_allowed?: boolean;
+}
+
+export interface JamendoAlbumTrack extends JamendoAlbum {
+  tracks?: {
+    id: string;
+    position?: string | number;
+    name: string;
+    duration: string | number;
+    license_ccurl?: string;
+    audio: string;
+    audiodownload?: string;
+    audiodownload_allowed?: boolean;
+  }[];
+}

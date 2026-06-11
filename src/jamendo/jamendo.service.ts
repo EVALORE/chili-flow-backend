@@ -5,8 +5,13 @@ import {
 } from '@nestjs/common';
 import { JamendoClient } from './jamendo.client';
 import { SearchTracksQueryDto } from './dto/search-tracks-query.dto';
-import { JamendoTrack } from './jamendo.types';
-import { mapJamendoTrack } from './jamendo.mapper';
+import { JamendoAlbum, JamendoAlbumTrack, JamendoTrack } from './jamendo.types';
+import {
+  mapJamendoAlbum,
+  mapJamendoAlbumWithTracks,
+  mapJamendoTrack,
+} from './jamendo.mapper';
+import { AlbumsQueryDto } from './dto/albums-query.dto';
 
 @Injectable()
 export class JamendoService {
@@ -60,5 +65,48 @@ export class JamendoService {
       action: 'download',
       audioformat: 'mp32',
     });
+  }
+
+  async findAlbums({
+    limit,
+    offset,
+    search,
+    artistId,
+    artistName,
+    type,
+  }: AlbumsQueryDto) {
+    const response = await this.jamendoClient.get<JamendoAlbum>('/albums', {
+      limit,
+      offset,
+      namesearch: search,
+      artist_id: artistId,
+      artist_name: artistName,
+      type,
+      imagesize: 300,
+    });
+
+    return {
+      count: response.headers.results_count,
+      results: response.results.map(mapJamendoAlbum),
+    };
+  }
+
+  async findAlbumTracks(id: string) {
+    const response = await this.jamendoClient.get<JamendoAlbumTrack>(
+      '/albums/tracks',
+      {
+        id,
+        limit: 1,
+        imagesize: 300,
+        audioformat: 'mp32',
+        audiodlformat: 'mp32',
+      },
+    );
+
+    if (!response.results[0]) {
+      throw new NotFoundException('Jamendo album not found');
+    }
+
+    return mapJamendoAlbumWithTracks(response.results[0]);
   }
 }

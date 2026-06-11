@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Query, Redirect } from '@nestjs/common';
 import { JamendoService } from './jamendo.service';
 import { SearchTracksQueryDto } from './dto/search-tracks-query.dto';
+import { AlbumsQueryDto } from './dto/albums-query.dto';
 
 @Controller('jamendo')
 export class JamendoController {
@@ -9,6 +10,16 @@ export class JamendoController {
   @Get('search/tracks')
   searchTracks(@Query() query: SearchTracksQueryDto) {
     return this.jamendoService.searchTracks(query);
+  }
+
+  @Get('albums')
+  findAlbums(@Query() query: AlbumsQueryDto) {
+    return this.jamendoService.findAlbums(query);
+  }
+
+  @Get('albums/:id/tracks')
+  findAlbumTracks(@Param('id') id: string) {
+    return this.jamendoService.findAlbumTracks(id);
   }
 
   @Get('tracks/:id/file')
