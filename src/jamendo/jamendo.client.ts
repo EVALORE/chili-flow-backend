@@ -8,7 +8,14 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JamendoResponse } from './jamendo.types';
 
-type JamendoQueryParams = Record<string, string | number | boolean | undefined>;
+type JamendoQueryValue =
+  | string
+  | number
+  | boolean
+  | readonly string[]
+  | undefined;
+
+type JamendoQueryParams = Record<string, JamendoQueryValue>;
 
 const TIMEOUT_MS = 10_000 as const;
 
@@ -28,9 +35,19 @@ export class JamendoClient {
     url.searchParams.set('format', 'json');
 
     for (const [key, value] of Object.entries(params)) {
-      if (value !== undefined) {
-        url.searchParams.set(key, String(value));
+      if (value === undefined) {
+        continue;
       }
+
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          url.searchParams.append(key, item);
+        }
+
+        continue;
+      }
+
+      url.searchParams.set(key, String(value));
     }
 
     const controller = new AbortController();

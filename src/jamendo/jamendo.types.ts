@@ -1,4 +1,4 @@
-export interface JamendoResponse<T> {
+export interface JamendoResponse<TResults> {
   headers: {
     status: string;
     code: number;
@@ -6,7 +6,7 @@ export interface JamendoResponse<T> {
     warnings: string;
     results_count: number;
   };
-  results: T[];
+  results: TResults;
 }
 
 export interface JamendoTrack {
@@ -60,4 +60,16 @@ export interface JamendoArtist {
   image?: string;
   shorturl?: string;
   shareurl?: string;
+}
+
+export interface JamendoAutocompleteMatch {
+  match: string;
+  count?: number;
+}
+
+export interface JamendoAutocompleteResults {
+  tracks?: JamendoAutocompleteMatch[];
+  albums?: JamendoAutocompleteMatch[];
+  artists?: JamendoAutocompleteMatch[];
+  tags?: JamendoAutocompleteMatch[];
 }

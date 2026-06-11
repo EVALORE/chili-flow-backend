@@ -9,27 +9,44 @@ import {
   JamendoAlbum,
   JamendoAlbumTrack,
   JamendoArtist,
+  JamendoAutocompleteResults,
   JamendoTrack,
 } from './jamendo.types';
 import {
   mapJamendoAlbum,
   mapJamendoAlbumWithTracks,
   mapJamendoArtist,
+  mapJamendoAutocompleteMatch,
   mapJamendoTrack,
 } from './jamendo.mapper';
 import { AlbumsQueryDto } from './dto/albums-query.dto';
 import { ArtistsQueryDto } from './dto/artist-query.dto';
+import { AutocompleteQueryDto } from './dto/autocomplete-query.dto';
 
 @Injectable()
 export class JamendoService {
   constructor(private readonly jamendoClient: JamendoClient) {}
 
-  async searchTracks({ limit, search, offset }: SearchTracksQueryDto) {
-    const response = await this.jamendoClient.get<JamendoTrack>('/tracks', {
+  async searchTracks({
+    limit,
+    search,
+    offset,
+    tags,
+    fuzzyTags,
+    type,
+    order,
+  }: SearchTracksQueryDto) {
+    const response = await this.jamendoClient.get<JamendoTrack[]>('/tracks', {
       search,
       limit,
       offset,
+      'tags[]': tags,
+      'fuzzytags[]': fuzzyTags,
+      'type[]': type,
+      order,
       include: 'musicinfo',
+      audioformat: 'mp32',
+      audiodlformat: 'mp32s',
     });
 
     return {
@@ -39,7 +56,7 @@ export class JamendoService {
   }
 
   async findTrack(id: string) {
-    const response = await this.jamendoClient.get<JamendoTrack>('/tracks', {
+    const response = await this.jamendoClient.get<JamendoTrack[]>('/tracks', {
       id,
       include: 'musicinfo',
     });
@@ -48,7 +65,7 @@ export class JamendoService {
   }
 
   async findSimilarTracks(id: string) {
-    const response = await this.jamendoClient.get<JamendoTrack>(
+    const response = await this.jamendoClient.get<JamendoTrack[]>(
       '/tracks/similar',
       { id },
     );
@@ -82,7 +99,7 @@ export class JamendoService {
     artistName,
     type,
   }: AlbumsQueryDto) {
-    const response = await this.jamendoClient.get<JamendoAlbum>('/albums', {
+    const response = await this.jamendoClient.get<JamendoAlbum[]>('/albums', {
       limit,
       offset,
       namesearch: search,
@@ -99,7 +116,7 @@ export class JamendoService {
   }
 
   async findAlbumTracks(id: string) {
-    const response = await this.jamendoClient.get<JamendoAlbumTrack>(
+    const response = await this.jamendoClient.get<JamendoAlbumTrack[]>(
       '/albums/tracks',
       {
         id,
@@ -118,7 +135,7 @@ export class JamendoService {
   }
 
   async findArtists({ limit, offset, search }: ArtistsQueryDto) {
-    const response = await this.jamendoClient.get<JamendoArtist>('/artists', {
+    const response = await this.jamendoClient.get<JamendoArtist[]>('/artists', {
       limit,
       offset,
       namesearch: search,
@@ -132,7 +149,7 @@ export class JamendoService {
   }
 
   async findArtistTracks(id: string) {
-    const response = await this.jamendoClient.get<JamendoTrack>(
+    const response = await this.jamendoClient.get<JamendoTrack[]>(
       '/artists/tracks',
       {
         id,
@@ -150,7 +167,7 @@ export class JamendoService {
   }
 
   async findArtistAlbums(id: string) {
-    const response = await this.jamendoClient.get<JamendoAlbum>(
+    const response = await this.jamendoClient.get<JamendoAlbum[]>(
       '/artists/albums',
       {
         id,
@@ -161,6 +178,27 @@ export class JamendoService {
     return {
       count: response.headers.results_count,
       results: response.results.map(mapJamendoAlbum),
+    };
+  }
+
+  async autocomplete({ prefix, limit, entity }: AutocompleteQueryDto) {
+    const response = await this.jamendoClient.get<JamendoAutocompleteResults>(
+      '/autocomplete',
+      {
+        prefix,
+        limit,
+        'entity[]': entity,
+        matchcount: true,
+      },
+    );
+
+    return {
+      tracks: (response.results.tracks ?? []).map(mapJamendoAutocompleteMatch),
+      albums: (response.results.albums ?? []).map(mapJamendoAutocompleteMatch),
+      artists: (response.results.artists ?? []).map(
+        mapJamendoAutocompleteMatch,
+      ),
+      tags: (response.results.tags ?? []).map(mapJamendoAutocompleteMatch),
     };
   }
 }

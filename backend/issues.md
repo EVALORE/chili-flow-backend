@@ -547,7 +547,7 @@ Acceptance Criteria
 - Artist page can show popular tracks.
 - Artist page can show albums with cover, title, release date, and track count.
 
-#### name: [backend] Jamendo autocomplete - Not Started
+#### name: [backend] Jamendo autocomplete - Done
 
 Goal
 

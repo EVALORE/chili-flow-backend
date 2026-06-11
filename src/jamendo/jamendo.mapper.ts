@@ -2,6 +2,7 @@ import {
   JamendoAlbum,
   JamendoAlbumTrack,
   JamendoArtist,
+  JamendoAutocompleteMatch,
   JamendoTrack,
 } from './jamendo.types';
 
@@ -77,5 +78,12 @@ export function mapJamendoArtist(artist: JamendoArtist) {
     websiteUrl: artist.website || null,
     joinDate: artist.joindate || null,
     shareUrl: artist.shareurl || artist.shorturl || null,
+  };
+}
+
+export function mapJamendoAutocompleteMatch(item: JamendoAutocompleteMatch) {
+  return {
+    label: item.match,
+    count: item.count ?? null,
   };
 }

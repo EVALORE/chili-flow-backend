@@ -3,6 +3,7 @@ import { JamendoService } from './jamendo.service';
 import { SearchTracksQueryDto } from './dto/search-tracks-query.dto';
 import { AlbumsQueryDto } from './dto/albums-query.dto';
 import { ArtistsQueryDto } from './dto/artist-query.dto';
+import { AutocompleteQueryDto } from './dto/autocomplete-query.dto';
 
 @Controller('jamendo')
 export class JamendoController {
@@ -54,5 +55,10 @@ export class JamendoController {
   @Get('artists/:id/albums')
   findArtistAlbums(@Param('id') id: string) {
     return this.jamendoService.findArtistAlbums(id);
+  }
+
+  @Get('autocomplete')
+  autocomplete(@Query() query: AutocompleteQueryDto) {
+    return this.jamendoService.autocomplete(query);
   }
 }
