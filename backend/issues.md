@@ -8,7 +8,7 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 2. `[backend] Database and data model` - Done
 3. `[backend] Auth and users` - Done
 4. `[backend] Uploaded tracks` - Done
-5. `[backend] Jamendo read API` - In Progress
+5. `[backend] Jamendo read API` - Done
 6. `[backend] Playlists` - Not Started
 7. `[backend] Recently played` - Not Started
 8. `[backend] Testing, docs, and production hardening` - Not Started
@@ -398,7 +398,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Jamendo read API - In Progress
+## name: [backend] Jamendo read API - Done
 
 ### Goal
 
@@ -429,7 +429,7 @@ Expose app-focused Jamendo routes for search, browsing, artist pages, album page
 
 ### Sub-issues
 
-#### name: [backend] Jamendo client hardening - In Progress
+#### name: [backend] Jamendo client hardening - Done
 
 Goal
 
@@ -489,7 +489,7 @@ Acceptance Criteria
 - Track detail page can load one track by ID.
 - Similar tracks list can be shown by the frontend.
 
-#### name: [backend] Jamendo track file redirect - Not Started
+#### name: [backend] Jamendo track file redirect - Done
 
 Goal
 
@@ -508,7 +508,7 @@ Acceptance Criteria
 - Frontend can request a track file through the backend route.
 - Backend does not offer downloads when Jamendo disallows them.
 
-#### name: [backend] Jamendo albums - Not Started
+#### name: [backend] Jamendo albums - Done
 
 Goal
 
@@ -527,7 +527,7 @@ Acceptance Criteria
 - Album list can be rendered by the frontend.
 - Album page can render tracks for one album.
 
-#### name: [backend] Jamendo artists - Not Started
+#### name: [backend] Jamendo artists - Done
 
 Goal
 
@@ -547,7 +547,7 @@ Acceptance Criteria
 - Artist page can show popular tracks.
 - Artist page can show albums with cover, title, release date, and track count.
 
-#### name: [backend] Jamendo autocomplete - Not Started
+#### name: [backend] Jamendo autocomplete - Done
 
 Goal
 
@@ -565,7 +565,7 @@ Acceptance Criteria
 - Search UI can request suggestions while typing.
 - Empty or invalid prefix returns a validation error or empty result consistently.
 
-#### name: [backend] Jamendo public playlists - Not Started
+#### name: [backend] Jamendo public playlists - Done
 
 Goal
 

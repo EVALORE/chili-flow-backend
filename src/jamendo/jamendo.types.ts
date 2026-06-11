@@ -1,4 +1,4 @@
-export interface JamendoResponse<T> {
+export interface JamendoResponse<TResults> {
   headers: {
     status: string;
     code: number;
@@ -6,7 +6,7 @@ export interface JamendoResponse<T> {
     warnings: string;
     results_count: number;
   };
-  results: T[];
+  results: TResults;
 }
 
 export interface JamendoTrack {
@@ -24,4 +24,68 @@ export interface JamendoTrack {
   audiodownload_allowed?: boolean;
   shareurl: string;
   license_ccurl?: string;
+}
+
+export interface JamendoAlbum {
+  id: string;
+  name: string;
+  releasedate?: string;
+  artist_id: string;
+  artist_name: string;
+  image?: string;
+  zip?: string;
+  shorturl?: string;
+  shareurl?: string;
+  zip_allowed?: boolean;
+}
+
+export interface JamendoAlbumTrack extends JamendoAlbum {
+  tracks?: {
+    id: string;
+    position?: string | number;
+    name: string;
+    duration: string | number;
+    license_ccurl?: string;
+    audio: string;
+    audiodownload?: string;
+    audiodownload_allowed?: boolean;
+  }[];
+}
+
+export interface JamendoArtist {
+  id: string;
+  name: string;
+  website?: string;
+  joindate?: string;
+  image?: string;
+  shorturl?: string;
+  shareurl?: string;
+}
+
+export interface JamendoAutocompleteMatch {
+  match: string;
+  count?: number;
+}
+
+export interface JamendoAutocompleteResults {
+  tracks?: JamendoAutocompleteMatch[];
+  albums?: JamendoAutocompleteMatch[];
+  artists?: JamendoAutocompleteMatch[];
+  tags?: JamendoAutocompleteMatch[];
+}
+
+export interface JamendoPlaylist {
+  id: string;
+  name: string;
+  user_id?: string;
+  user_name?: string;
+  image?: string;
+  shareurl?: string;
+  shorturl?: string;
+  creationdate?: string;
+  tracks_count?: number;
+}
+
+export interface JamendoPlaylistTrack extends JamendoPlaylist {
+  tracks?: JamendoTrack[];
 }

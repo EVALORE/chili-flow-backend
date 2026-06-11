@@ -77,6 +77,16 @@ export class TracksService {
     return { deleted: true };
   }
 
+  async findOwnedTrack(ownerId: string, id: string) {
+    const track = await this.tracksRepository.findOwnedById(ownerId, id);
+
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
+
+    return track;
+  }
+
   private async _deleteStoredFile(filePath: string) {
     try {
       await unlink(filePath);
