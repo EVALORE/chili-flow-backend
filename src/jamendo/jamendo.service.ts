@@ -10,6 +10,8 @@ import {
   JamendoAlbumTrack,
   JamendoArtist,
   JamendoAutocompleteResults,
+  JamendoPlaylist,
+  JamendoPlaylistTrack,
   JamendoTrack,
 } from './jamendo.types';
 import {
@@ -17,11 +19,14 @@ import {
   mapJamendoAlbumWithTracks,
   mapJamendoArtist,
   mapJamendoAutocompleteMatch,
+  mapJamendoPlaylist,
+  mapJamendoPlaylistWithTracks,
   mapJamendoTrack,
 } from './jamendo.mapper';
 import { AlbumsQueryDto } from './dto/albums-query.dto';
 import { ArtistsQueryDto } from './dto/artist-query.dto';
 import { AutocompleteQueryDto } from './dto/autocomplete-query.dto';
+import { PlaylistsQueryDto } from './dto/playlists-query.dto';
 
 @Injectable()
 export class JamendoService {
@@ -200,5 +205,42 @@ export class JamendoService {
       ),
       tags: (response.results.tags ?? []).map(mapJamendoAutocompleteMatch),
     };
+  }
+
+  async findPlaylists({ limit, offset, search }: PlaylistsQueryDto) {
+    const response = await this.jamendoClient.get<JamendoPlaylist[]>(
+      '/playlists',
+      {
+        limit,
+        offset,
+        namesearch: search,
+        imagesize: 300,
+      },
+    );
+
+    return {
+      count: response.headers.results_count,
+      results: response.results.map(mapJamendoPlaylist),
+    };
+  }
+
+  async findPlaylistTracks(id: string) {
+    const response = await this.jamendoClient.get<JamendoPlaylistTrack[]>(
+      '/playlists/tracks',
+      {
+        id,
+        limit: 1,
+        imagesize: 300,
+        audioforamt: 'mp32',
+        audiodlformat: 'mp32',
+        include: 'musicinfo',
+      },
+    );
+
+    if (!response.results[0]) {
+      throw new NotFoundException('Jamendo playlist not found');
+    }
+
+    return mapJamendoPlaylistWithTracks(response.results[0]);
   }
 }

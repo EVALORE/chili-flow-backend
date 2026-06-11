@@ -3,6 +3,8 @@ import {
   JamendoAlbumTrack,
   JamendoArtist,
   JamendoAutocompleteMatch,
+  JamendoPlaylist,
+  JamendoPlaylistTrack,
   JamendoTrack,
 } from './jamendo.types';
 
@@ -85,5 +87,29 @@ export function mapJamendoAutocompleteMatch(item: JamendoAutocompleteMatch) {
   return {
     label: item.match,
     count: item.count ?? null,
+  };
+}
+
+export function mapJamendoPlaylist(playlist: JamendoPlaylist) {
+  return {
+    source: 'jamendo',
+    sourceId: playlist.id,
+    title: playlist.name,
+    author: playlist.user_name || null,
+    authorId: playlist.user_id || null,
+    coverUrl: playlist.image || null,
+    shareUrl: playlist.shareurl || playlist.shorturl || null,
+    createdAt: playlist.creationdate || null,
+    trackCount: playlist.tracks_count ?? null,
+  };
+}
+
+export function mapJamendoPlaylistWithTracks(playlist: JamendoPlaylistTrack) {
+  const tracks = playlist.tracks ?? [];
+
+  return {
+    ...mapJamendoPlaylist(playlist),
+    trackCount: tracks.length,
+    tracks: tracks.map(mapJamendoTrack),
   };
 }

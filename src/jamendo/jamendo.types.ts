@@ -73,3 +73,19 @@ export interface JamendoAutocompleteResults {
   artists?: JamendoAutocompleteMatch[];
   tags?: JamendoAutocompleteMatch[];
 }
+
+export interface JamendoPlaylist {
+  id: string;
+  name: string;
+  user_id?: string;
+  user_name?: string;
+  image?: string;
+  shareurl?: string;
+  shorturl?: string;
+  creationdate?: string;
+  tracks_count?: number;
+}
+
+export interface JamendoPlaylistTrack extends JamendoPlaylist {
+  tracks?: JamendoTrack[];
+}

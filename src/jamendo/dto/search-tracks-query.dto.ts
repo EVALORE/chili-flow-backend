@@ -38,7 +38,7 @@ export class SearchTracksQueryDto {
   @Transform(toStringArray)
   @ArrayMaxSize(2)
   @IsIn(['single', 'albumtrack'], { each: true })
-  type?: ('string' | 'albumtrack')[];
+  type?: ('single' | 'albumtrack')[];
 
   @IsOptional()
   @IsIn([
