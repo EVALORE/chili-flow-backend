@@ -110,12 +110,12 @@ export class JamendoClient {
       const message = error instanceof Error ? error.message : 'Unknown error';
 
       if (error instanceof Error && error.name === 'AbortError') {
-        this.logger.error('Jamendo API request timed out: ${url.pathname');
+        this.logger.error(`Jamendo API request timed out: ${url.pathname}`);
         throw new BadGatewayException('Jamendo API request timed out');
       }
 
       this.logger.error(`Jamendo API request failed: ${message}`);
-      throw new BadGatewayException(`Unable to reach Jamendo API" ${message}`);
+      throw new BadGatewayException(`Unable to reach Jamendo API: ${message}`);
     } finally {
       clearTimeout(timeout);
     }

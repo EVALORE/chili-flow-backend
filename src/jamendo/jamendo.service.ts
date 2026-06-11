@@ -48,7 +48,7 @@ export class JamendoService {
     const track = await this.findTrack(id);
 
     if (!track) {
-      throw new NotFoundException('Jamendo track out found');
+      throw new NotFoundException('Jamendo track not found');
     }
 
     if (!track.audiodownloadAllowed) {
