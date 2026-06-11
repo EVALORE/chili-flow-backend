@@ -8,7 +8,7 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 2. `[backend] Database and data model` - Done
 3. `[backend] Auth and users` - Done
 4. `[backend] Uploaded tracks` - Done
-5. `[backend] Jamendo read API` - In Progress
+5. `[backend] Jamendo read API` - Done
 6. `[backend] Playlists` - Not Started
 7. `[backend] Recently played` - Not Started
 8. `[backend] Testing, docs, and production hardening` - Not Started
@@ -398,7 +398,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Jamendo read API - In Progress
+## name: [backend] Jamendo read API - Done
 
 ### Goal
 
@@ -429,7 +429,7 @@ Expose app-focused Jamendo routes for search, browsing, artist pages, album page
 
 ### Sub-issues
 
-#### name: [backend] Jamendo client hardening - In Progress
+#### name: [backend] Jamendo client hardening - Done
 
 Goal
 
@@ -565,7 +565,7 @@ Acceptance Criteria
 - Search UI can request suggestions while typing.
 - Empty or invalid prefix returns a validation error or empty result consistently.
 
-#### name: [backend] Jamendo public playlists - Not Started
+#### name: [backend] Jamendo public playlists - Done
 
 Goal
 
