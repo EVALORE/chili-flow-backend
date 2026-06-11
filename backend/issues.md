@@ -7,7 +7,7 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 1. `[backend] Project foundation` - Done
 2. `[backend] Database and data model` - Done
 3. `[backend] Auth and users` - Done
-4. `[backend] Uploaded tracks` - Not Started
+4. `[backend] Uploaded tracks` - Done
 5. `[backend] Jamendo read API` - In Progress
 6. `[backend] Playlists` - Not Started
 7. `[backend] Recently played` - Not Started
@@ -284,7 +284,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Uploaded tracks - Not Started
+## name: [backend] Uploaded tracks - Done
 
 ### Goal
 
@@ -313,7 +313,7 @@ Allow authenticated users to upload, list, play, and delete their own audio trac
 
 ### Sub-issues
 
-#### name: [backend] Track upload endpoint - Not Started
+#### name: [backend] Track upload endpoint - Done
 
 Goal
 
@@ -338,7 +338,7 @@ Acceptance Criteria
 - Missing required metadata returns validation error.
 - Non-audio files are rejected.
 
-#### name: [backend] Uploaded track listing - Not Started
+#### name: [backend] Uploaded track listing - Done
 
 Goal
 
@@ -349,7 +349,7 @@ Tasks
 - Add `GET /tracks`.
 - Require authentication.
 - Query only current user's tracks.
-- Return track ID, title, artist, genre, duration if available, cover URL if available, audio URL, and created date.
+- Return track ID, title, artist, genre, duration if available, `publicUrl`, and created date.
 - Sort newest first by default.
 
 Acceptance Criteria
@@ -357,7 +357,7 @@ Acceptance Criteria
 - User sees only their own uploaded tracks.
 - Response has enough data for Library and player UI.
 
-#### name: [backend] Uploaded track deletion - Not Started
+#### name: [backend] Uploaded track deletion - Done
 
 Goal
 
@@ -378,7 +378,7 @@ Acceptance Criteria
 - User cannot delete another user's track.
 - Stored file is removed after deletion.
 
-#### name: [backend] Public uploaded media URLs - Not Started
+#### name: [backend] Public uploaded media URLs - Done
 
 Goal
 
@@ -393,7 +393,7 @@ Tasks
 
 Acceptance Criteria
 
-- Uploaded track response contains a playable `audioUrl`.
+- Uploaded track response contains a playable `publicUrl`.
 - API never returns raw server file paths.
 
 ---
