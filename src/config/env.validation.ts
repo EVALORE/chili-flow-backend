@@ -36,6 +36,24 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   JAMENDO_API_BASE_URL?: string;
+
+  @IsString()
+  UPLOADS_DIR!: string;
+
+  @IsString()
+  PUBLIC_BACKEND_URL!: string;
+
+  @IsString()
+  @IsOptional()
+  JAMENDO_CLIENT_SECRET?: string;
+
+  @IsString()
+  @IsOptional()
+  JAMENDO_REDIRECT_URI?: string;
+
+  @IsString()
+  @IsOptional()
+  FRONTEND_ORIGIN?: string;
 }
 
 export function validateEnv(config: Record<string, unknown>) {
