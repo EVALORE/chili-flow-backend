@@ -18,16 +18,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(dto: RegisterDto): Promise<AuthResponseDto> {
-    const email = this._normalizeEmail(dto.email);
-
+  async register({ email, password }: RegisterDto): Promise<AuthResponseDto> {
     const existingUser = await this.usersService.findByEmail(email);
 
     if (existingUser) {
       throw new ConflictException('Email is already registered');
     }
 
-    const passwordHash = await argon2.hash(dto.password);
+    const passwordHash = await argon2.hash(password);
 
     const user = await this.usersService.createUser({
       email,
@@ -37,28 +35,20 @@ export class AuthService {
     return this._buildAuthResponse(user);
   }
 
-  async login(dto: LoginDto): Promise<AuthResponseDto> {
-    const email = this._normalizeEmail(dto.email);
+  async login({ email, password }: LoginDto): Promise<AuthResponseDto> {
     const user = await this.usersService.findByEmail(email);
 
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const passwordIsValid = await argon2.verify(
-      user.passwordHash,
-      dto.password,
-    );
+    const passwordIsValid = await argon2.verify(user.passwordHash, password);
 
     if (!passwordIsValid) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
     return this._buildAuthResponse(user);
-  }
-
-  private _normalizeEmail(email: string) {
-    return email.toLowerCase().trim();
   }
 
   private async _buildAuthResponse(user: UserModel): Promise<AuthResponseDto> {

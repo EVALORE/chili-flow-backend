@@ -6,7 +6,7 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 
 1. `[backend] Project foundation` - In Progress
 2. `[backend] Database and data model` - Done
-3. `[backend] Auth and users` - In Progress
+3. `[backend] Auth and users` - Done
 4. `[backend] Uploaded tracks` - Not Started
 5. `[backend] Jamendo read API` - In Progress
 6. `[backend] Playlists` - Not Started
@@ -67,7 +67,7 @@ Acceptance Criteria
 - Optional Jamendo OAuth variables do not block read-only Jamendo features.
 - Defaults are used only for safe local development values.
 
-#### name: [backend] Common API infrastructure - Not Started
+#### name: [backend] Common API infrastructure - In Progress
 
 Goal
 
@@ -171,7 +171,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Auth and users - In Progress
+## name: [backend] Auth and users - Done
 
 ### Goal
 
@@ -221,7 +221,7 @@ Acceptance Criteria
 - Auth can create and look up users through `UsersModule`.
 - API responses never include password hashes.
 
-#### name: [backend] Register endpoint - In Progress
+#### name: [backend] Register endpoint - Done
 
 Goal
 
@@ -262,7 +262,7 @@ Acceptance Criteria
 - Invalid credentials do not reveal whether the email exists.
 - Returned user object does not include password hash.
 
-#### name: [backend] JWT protection - In Progress
+#### name: [backend] JWT protection - Done
 
 Goal
 
@@ -273,8 +273,8 @@ Tasks
 - Add JWT strategy or token verification service.
 - Add `JwtAuthGuard`.
 - Add `CurrentUser` decorator.
-- Apply guard to tracks, playlists, and recently played endpoints.
-- Add tests for missing, invalid, and valid tokens.
+- Apply guard to protected feature endpoints as those modules are added.
+- Add tests for missing, invalid, and valid tokens under testing/hardening.
 
 Acceptance Criteria
 
