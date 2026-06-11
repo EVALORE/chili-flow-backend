@@ -1,4 +1,9 @@
-import { JamendoAlbum, JamendoAlbumTrack, JamendoTrack } from './jamendo.types';
+import {
+  JamendoAlbum,
+  JamendoAlbumTrack,
+  JamendoArtist,
+  JamendoTrack,
+} from './jamendo.types';
 
 export function mapJamendoTrack(track: JamendoTrack) {
   return {
@@ -60,5 +65,17 @@ export function mapJamendoAlbumWithTracks(album: JamendoAlbumTrack) {
       licenseUrl: track.license_ccurl || null,
       audiodownloadAllowed: Boolean(track.audiodownload_allowed),
     })),
+  };
+}
+
+export function mapJamendoArtist(artist: JamendoArtist) {
+  return {
+    source: 'jamendo',
+    sourceId: artist.id,
+    name: artist.name,
+    imageUrl: artist.image || null,
+    websiteUrl: artist.website || null,
+    joinDate: artist.joindate || null,
+    shareUrl: artist.shareurl || artist.shorturl || null,
   };
 }

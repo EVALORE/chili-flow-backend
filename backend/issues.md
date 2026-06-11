@@ -527,7 +527,7 @@ Acceptance Criteria
 - Album list can be rendered by the frontend.
 - Album page can render tracks for one album.
 
-#### name: [backend] Jamendo artists - Not Started
+#### name: [backend] Jamendo artists - Done
 
 Goal
 

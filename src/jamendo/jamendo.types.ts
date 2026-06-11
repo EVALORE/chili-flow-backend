@@ -51,3 +51,13 @@ export interface JamendoAlbumTrack extends JamendoAlbum {
     audiodownload_allowed?: boolean;
   }[];
 }
+
+export interface JamendoArtist {
+  id: string;
+  name: string;
+  website?: string;
+  joindate?: string;
+  image?: string;
+  shorturl?: string;
+  shareurl?: string;
+}

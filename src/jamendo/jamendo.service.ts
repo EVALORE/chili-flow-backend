@@ -5,13 +5,20 @@ import {
 } from '@nestjs/common';
 import { JamendoClient } from './jamendo.client';
 import { SearchTracksQueryDto } from './dto/search-tracks-query.dto';
-import { JamendoAlbum, JamendoAlbumTrack, JamendoTrack } from './jamendo.types';
+import {
+  JamendoAlbum,
+  JamendoAlbumTrack,
+  JamendoArtist,
+  JamendoTrack,
+} from './jamendo.types';
 import {
   mapJamendoAlbum,
   mapJamendoAlbumWithTracks,
+  mapJamendoArtist,
   mapJamendoTrack,
 } from './jamendo.mapper';
 import { AlbumsQueryDto } from './dto/albums-query.dto';
+import { ArtistsQueryDto } from './dto/artist-query.dto';
 
 @Injectable()
 export class JamendoService {
@@ -108,5 +115,52 @@ export class JamendoService {
     }
 
     return mapJamendoAlbumWithTracks(response.results[0]);
+  }
+
+  async findArtists({ limit, offset, search }: ArtistsQueryDto) {
+    const response = await this.jamendoClient.get<JamendoArtist>('/artists', {
+      limit,
+      offset,
+      namesearch: search,
+      imagesize: 300,
+    });
+
+    return {
+      count: response.headers.results_count,
+      results: response.results.map(mapJamendoArtist),
+    };
+  }
+
+  async findArtistTracks(id: string) {
+    const response = await this.jamendoClient.get<JamendoTrack>(
+      '/artists/tracks',
+      {
+        id,
+        include: 'musicinfo',
+        imagesize: 300,
+        audioformat: 'mp32',
+        audiodlformat: 'mp32',
+      },
+    );
+
+    return {
+      count: response.headers.results_count,
+      results: response.results.map(mapJamendoTrack),
+    };
+  }
+
+  async findArtistAlbums(id: string) {
+    const response = await this.jamendoClient.get<JamendoAlbum>(
+      '/artists/albums',
+      {
+        id,
+        imagesize: 300,
+      },
+    );
+
+    return {
+      count: response.headers.results_count,
+      results: response.results.map(mapJamendoAlbum),
+    };
   }
 }

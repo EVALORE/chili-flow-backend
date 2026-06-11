@@ -2,6 +2,7 @@ import { Controller, Get, Param, Query, Redirect } from '@nestjs/common';
 import { JamendoService } from './jamendo.service';
 import { SearchTracksQueryDto } from './dto/search-tracks-query.dto';
 import { AlbumsQueryDto } from './dto/albums-query.dto';
+import { ArtistsQueryDto } from './dto/artist-query.dto';
 
 @Controller('jamendo')
 export class JamendoController {
@@ -38,5 +39,20 @@ export class JamendoController {
   @Get('tracks/:id/similar')
   findSimilarTracks(@Param('id') id: string) {
     return this.jamendoService.findSimilarTracks(id);
+  }
+
+  @Get('artists')
+  findArtists(@Query() query: ArtistsQueryDto) {
+    return this.jamendoService.findArtists(query);
+  }
+
+  @Get('artists/:id/tracks')
+  findArtistTracks(@Param('id') id: string) {
+    return this.jamendoService.findArtistTracks(id);
+  }
+
+  @Get('artists/:id/albums')
+  findArtistAlbums(@Param('id') id: string) {
+    return this.jamendoService.findArtistAlbums(id);
   }
 }
