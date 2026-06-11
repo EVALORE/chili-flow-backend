@@ -1,6 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JamendoClient } from './jamendo.client';
-import { SearchTRacksQueryDto } from './dto/search-tracks-query.dto';
+import { SearchTracksQueryDto } from './dto/search-tracks-query.dto';
 import { JamendoTrack } from './jamendo.types';
 import { mapJamendoTrack } from './jamendo.mapper';
 
@@ -8,7 +12,7 @@ import { mapJamendoTrack } from './jamendo.mapper';
 export class JamendoService {
   constructor(private readonly jamendoClient: JamendoClient) {}
 
-  async searchTracks({ limit, search, offset }: SearchTRacksQueryDto) {
+  async searchTracks({ limit, search, offset }: SearchTracksQueryDto) {
     const response = await this.jamendoClient.get<JamendoTrack>('/tracks', {
       search,
       limit,
@@ -38,5 +42,23 @@ export class JamendoService {
     );
 
     return response.results.map(mapJamendoTrack);
+  }
+
+  async getTrackFileUrl(id: string) {
+    const track = await this.findTrack(id);
+
+    if (!track) {
+      throw new NotFoundException('Jamendo track out found');
+    }
+
+    if (!track.audiodownloadAllowed) {
+      throw new BadRequestException('Jamendo track download is not allowed');
+    }
+
+    return this.jamendoClient.getRedirectUrl('/tracks/file', {
+      id,
+      action: 'download',
+      audioformat: 'mp32',
+    });
   }
 }

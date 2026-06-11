@@ -489,7 +489,7 @@ Acceptance Criteria
 - Track detail page can load one track by ID.
 - Similar tracks list can be shown by the frontend.
 
-#### name: [backend] Jamendo track file redirect - Not Started
+#### name: [backend] Jamendo track file redirect - Done
 
 Goal
 

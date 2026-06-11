@@ -1,14 +1,22 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Redirect } from '@nestjs/common';
 import { JamendoService } from './jamendo.service';
-import { SearchTRacksQueryDto } from './dto/search-tracks-query.dto';
+import { SearchTracksQueryDto } from './dto/search-tracks-query.dto';
 
 @Controller('jamendo')
 export class JamendoController {
   constructor(private readonly jamendoService: JamendoService) {}
 
   @Get('search/tracks')
-  searchTracks(@Query() query: SearchTRacksQueryDto) {
+  searchTracks(@Query() query: SearchTracksQueryDto) {
     return this.jamendoService.searchTracks(query);
+  }
+
+  @Get('tracks/:id/file')
+  @Redirect(undefined, 302)
+  async getTrackFile(@Param('id') id: string) {
+    const url = await this.jamendoService.getTrackFileUrl(id);
+
+    return { url };
   }
 
   @Get('tracks/:id')
