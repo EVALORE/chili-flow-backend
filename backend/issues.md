@@ -4,7 +4,7 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 
 ## Recommended Order
 
-1. `[backend] Project foundation` - In Progress
+1. `[backend] Project foundation` - Done
 2. `[backend] Database and data model` - Done
 3. `[backend] Auth and users` - Done
 4. `[backend] Uploaded tracks` - Not Started
@@ -15,7 +15,7 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 
 ---
 
-## name: [backend] Project foundation - In Progress
+## name: [backend] Project foundation - Done
 
 ### Goal
 
@@ -41,7 +41,7 @@ Prepare the NestJS backend foundation used by every feature module.
 
 ### Sub-issues
 
-#### name: [backend] Config and environment validation - In Progress
+#### name: [backend] Config and environment validation - Done
 
 Goal
 
@@ -67,7 +67,7 @@ Acceptance Criteria
 - Optional Jamendo OAuth variables do not block read-only Jamendo features.
 - Defaults are used only for safe local development values.
 
-#### name: [backend] Common API infrastructure - In Progress
+#### name: [backend] Common API infrastructure - Done
 
 Goal
 
@@ -87,7 +87,7 @@ Acceptance Criteria
 - API errors return a consistent response shape.
 - Feature modules do not duplicate common request/user types.
 
-#### name: [backend] Health check endpoint - Not Started
+#### name: [backend] Health check endpoint - Done
 
 Goal
 

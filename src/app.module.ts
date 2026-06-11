@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JamendoModule } from './jamendo/jamendo.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
     DatabaseModule,
     JamendoModule,
     AuthModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
