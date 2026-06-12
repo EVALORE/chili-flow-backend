@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
 import { TracksModule } from './tracks/tracks.module';
 import { PlaylistsModule } from './playlists/playlists.module';
+import { RecentlyPlayedModule } from './recently-played/recently-played.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PlaylistsModule } from './playlists/playlists.module';
     HealthModule,
     TracksModule,
     PlaylistsModule,
+    RecentlyPlayedModule,
   ],
 })
 export class AppModule {}

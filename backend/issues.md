@@ -10,7 +10,7 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 4. `[backend] Uploaded tracks` - Done
 5. `[backend] Jamendo read API` - Done
 6. `[backend] Playlists` - Done
-7. `[backend] Recently played` - Not Started
+7. `[backend] Recently played` - Done
 8. `[backend] Testing, docs, and production hardening` - Not Started
 
 ---
@@ -700,7 +700,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Recently played - Not Started
+## name: [backend] Recently played - Done
 
 ### Goal
 
@@ -726,7 +726,7 @@ Save and show user listening history.
 
 ### Sub-issues
 
-#### name: [backend] Save recently played item - Not Started
+#### name: [backend] Save recently played item - Done
 
 Goal
 
@@ -748,7 +748,7 @@ Acceptance Criteria
 - Invalid source values are rejected.
 - History item belongs only to the authenticated user.
 
-#### name: [backend] List recently played items - Not Started
+#### name: [backend] List recently played items - Done
 
 Goal
 
