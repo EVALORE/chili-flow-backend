@@ -1,0 +1,102 @@
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../database/prisma.service';
+import { TrackSource } from '../../prisma/generated/enums';
+
+@Injectable()
+export class PlaylistsRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  create(ownerId: string, data: { name: string; description?: string }) {
+    return this.prisma.playlist.create({ data: { ownerId, ...data } });
+  }
+
+  findManyByOwner(ownerId: string) {
+    return this.prisma.playlist.findMany({
+      where: { ownerId },
+      include: { tracks: { select: { duration: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  findOwnedById(ownerId: string, id: string) {
+    return this.prisma.playlist.findFirst({
+      where: { id, ownerId },
+      include: { tracks: { orderBy: { position: 'asc' } } },
+    });
+  }
+
+  updateById(id: string, data: { name?: string; description?: string }) {
+    return this.prisma.playlist.update({ where: { id }, data });
+  }
+
+  deleteById(id: string) {
+    return this.prisma.playlist.delete({ where: { id } });
+  }
+
+  async addTrack(
+    playlistId: string,
+    data: {
+      source: typeof TrackSource.JAMENDO | typeof TrackSource.UPLOADED;
+      sourceId: string;
+      title: string;
+      artist: string;
+      coverUrl?: string | null;
+      audioUrl?: string | null;
+      duration?: number | null;
+    },
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const position = await tx.playlistTrack.count({ where: { playlistId } });
+
+      return tx.playlistTrack.create({
+        data: { playlistId, position, ...data },
+      });
+    });
+  }
+
+  async removeTrack(playlistId: string, trackId: string) {
+    return this.prisma.$transaction(async (tx) => {
+      const result = await tx.playlistTrack.deleteMany({
+        where: { id: trackId, playlistId },
+      });
+
+      const tracks = await tx.playlistTrack.findMany({
+        where: { playlistId },
+        orderBy: { position: 'asc' },
+      });
+
+      await Promise.all(
+        tracks.map((track, index) =>
+          tx.playlistTrack.update({
+            where: { id: track.id },
+            data: { position: index },
+          }),
+        ),
+      );
+
+      return result.count > 0;
+    });
+  }
+
+  async reorderTracks(playlistId: string, trackIds: string[]) {
+    return this.prisma.$transaction(async (tx) => {
+      await Promise.all(
+        trackIds.map((trackId, index) =>
+          tx.playlistTrack.update({
+            where: { id: trackId },
+            data: { position: index + trackIds.length },
+          }),
+        ),
+      );
+
+      await Promise.all(
+        trackIds.map((trackId, index) =>
+          tx.playlistTrack.update({
+            where: { id: trackId },
+            data: { position: index },
+          }),
+        ),
+      );
+    });
+  }
+}

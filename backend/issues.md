@@ -9,7 +9,7 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 3. `[backend] Auth and users` - Done
 4. `[backend] Uploaded tracks` - Done
 5. `[backend] Jamendo read API` - Done
-6. `[backend] Playlists` - Not Started
+6. `[backend] Playlists` - Done
 7. `[backend] Recently played` - Not Started
 8. `[backend] Testing, docs, and production hardening` - Not Started
 
@@ -585,7 +585,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Playlists - Not Started
+## name: [backend] Playlists - Done
 
 ### Goal
 
@@ -614,7 +614,7 @@ Store and manage user-owned playlists with both Jamendo tracks and uploaded trac
 
 ### Sub-issues
 
-#### name: [backend] Playlist CRUD - Not Started
+#### name: [backend] Playlist CRUD - Done
 
 Goal
 
@@ -637,7 +637,7 @@ Acceptance Criteria
 - Playlist list includes track count and total duration.
 - Playlist detail includes ordered tracks.
 
-#### name: [backend] Add tracks to playlist - Not Started
+#### name: [backend] Add tracks to playlist - Done
 
 Goal
 
@@ -659,7 +659,7 @@ Acceptance Criteria
 - User can add Jamendo tracks using normalized metadata.
 - Track order remains stable.
 
-#### name: [backend] Remove playlist tracks - Not Started
+#### name: [backend] Remove playlist tracks - Done
 
 Goal
 
@@ -678,7 +678,7 @@ Acceptance Criteria
 - Uploaded track file remains available outside the playlist.
 - Other users' playlists cannot be changed.
 
-#### name: [backend] Reorder playlist tracks - Not Started
+#### name: [backend] Reorder playlist tracks - Done
 
 Goal
 
