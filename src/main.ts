@@ -16,7 +16,9 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(
+    new HttpExceptionFilter(configService.getOrThrow<string>('app.nodeEnv')),
+  );
 
   app.useStaticAssets(configService.getOrThrow<string>('uploads.dir'), {
     prefix: '/uploads/',
