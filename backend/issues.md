@@ -913,7 +913,7 @@ Acceptance Criteria
 - A new developer can run the backend locally using the docs.
 - Docs do not include real secrets.
 
-#### name: [backend] Swagger OpenAPI setup - Not Started
+#### name: [backend] Swagger OpenAPI setup - Done
 
 Goal
 

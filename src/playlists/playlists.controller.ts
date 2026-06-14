@@ -16,7 +16,10 @@ import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { ReorderPlaylistTracksDto } from './dto/reorder-playlist-tracks.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { PlaylistsService } from './playlists.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('playlists')
+@ApiBearerAuth('bearer')
 @Controller('playlists')
 @UseGuards(JwtAuthGuard)
 export class PlaylistsController {

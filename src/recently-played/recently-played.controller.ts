@@ -5,7 +5,10 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../common/types/authenticated-user.type';
 import { CreateRecentlyPlayedDto } from './dto/create-recently-played.dto';
 import { RecentlyPlayedQueryDto } from './dto/recently-played-query.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('recently-played')
+@ApiBearerAuth('bearer')
 @Controller('recently-played')
 @UseGuards(JwtAuthGuard)
 export class RecentlyPlayedController {

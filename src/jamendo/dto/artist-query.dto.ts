@@ -1,11 +1,14 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class ArtistsQueryDto {
+  @ApiPropertyOptional({ example: 'Chili Flow' })
   @IsOptional()
   @IsString()
   search?: string;
 
+  @ApiPropertyOptional({ example: 20, minimum: 1, maximum: 200 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -13,6 +16,7 @@ export class ArtistsQueryDto {
   @Max(200)
   limit = 20;
 
+  @ApiPropertyOptional({ example: 0, minimum: 0 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()

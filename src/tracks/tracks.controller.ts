@@ -17,13 +17,32 @@ import { audioFileFilter } from './storage/audio-file.storage';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../common/types/authenticated-user.type';
 import { UploadTrackDto } from './dto/upload-track.dto';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('tracks')
+@ApiBearerAuth('bearer')
 @Controller('tracks')
 @UseGuards(JwtAuthGuard)
 export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
   @Post('upload')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['title', 'artist', 'file'],
+      properties: {
+        title: { type: 'string', example: 'Night Drive' },
+        artist: { type: 'string', example: 'Chili Flow' },
+        genre: { type: 'string', example: 'Electronic' },
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),

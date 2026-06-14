@@ -5,7 +5,9 @@ import { AlbumsQueryDto } from './dto/albums-query.dto';
 import { ArtistsQueryDto } from './dto/artist-query.dto';
 import { AutocompleteQueryDto } from './dto/autocomplete-query.dto';
 import { PlaylistsQueryDto } from './dto/playlists-query.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('jamendo')
 @Controller('jamendo')
 export class JamendoController {
   constructor(private readonly jamendoService: JamendoService) {}
