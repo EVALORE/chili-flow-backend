@@ -5,21 +5,31 @@ import { AutocompleteQueryDto } from '../jamendo/dto/autocomplete-query.dto';
 import { PlaylistsQueryDto } from '../jamendo/dto/playlists-query.dto';
 import { SearchTracksQueryDto } from '../jamendo/dto/search-tracks-query.dto';
 import { JamendoService } from '../jamendo/jamendo.service';
+import { CatalogCacheService } from './catalog-cache.service';
 
 @Injectable()
 export class CatalogService {
-  constructor(private readonly jamendoService: JamendoService) {}
+  constructor(
+    private readonly jamendoService: JamendoService,
+    private readonly catalogCacheService: CatalogCacheService,
+  ) {}
 
   searchTracks(query: SearchTracksQueryDto) {
-    return this.jamendoService.searchTracks(query);
+    return this.catalogCacheService.getOrSet('searchTracks', query, () =>
+      this.jamendoService.searchTracks(query),
+    );
   }
 
   findTrack(id: string) {
-    return this.jamendoService.findTrack(id);
+    return this.catalogCacheService.getOrSet('findTrack', { id }, () =>
+      this.jamendoService.findTrack(id),
+    );
   }
 
   findSimilarTracks(id: string) {
-    return this.jamendoService.findSimilarTracks(id);
+    return this.catalogCacheService.getOrSet('findSimilarTracks', { id }, () =>
+      this.jamendoService.findSimilarTracks(id),
+    );
   }
 
   getTrackFileUrl(id: string) {
@@ -27,34 +37,50 @@ export class CatalogService {
   }
 
   findAlbums(query: AlbumsQueryDto) {
-    return this.jamendoService.findAlbums(query);
+    return this.catalogCacheService.getOrSet('findAlbums', query, () =>
+      this.jamendoService.findAlbums(query),
+    );
   }
 
   findAlbumTracks(id: string) {
-    return this.jamendoService.findAlbumTracks(id);
+    return this.catalogCacheService.getOrSet('findAlbumTracks', { id }, () =>
+      this.jamendoService.findAlbumTracks(id),
+    );
   }
 
   findArtists(query: ArtistsQueryDto) {
-    return this.jamendoService.findArtists(query);
+    return this.catalogCacheService.getOrSet('findArtists', query, () =>
+      this.jamendoService.findArtists(query),
+    );
   }
 
   findArtistTracks(id: string) {
-    return this.jamendoService.findArtistTracks(id);
+    return this.catalogCacheService.getOrSet('findArtistTracks', { id }, () =>
+      this.jamendoService.findArtistTracks(id),
+    );
   }
 
   findArtistAlbums(id: string) {
-    return this.jamendoService.findArtistAlbums(id);
+    return this.catalogCacheService.getOrSet('findArtistAlbums', { id }, () =>
+      this.jamendoService.findArtistAlbums(id),
+    );
   }
 
   autocomplete(query: AutocompleteQueryDto) {
-    return this.jamendoService.autocomplete(query);
+    return this.catalogCacheService.getOrSet('autocomplete', query, () =>
+      this.jamendoService.autocomplete(query),
+    );
   }
 
   findPlaylists(query: PlaylistsQueryDto) {
-    return this.jamendoService.findPlaylists(query);
+    return this.catalogCacheService.getOrSet('findPlaylists', query, () =>
+      this.jamendoService.findPlaylists(query),
+    );
   }
 
   findPlaylistTracks(id: string) {
-    return this.jamendoService.findPlaylistTracks(id);
+    return this.catalogCacheService.getOrSet('findPlaylistTracks', { id }, () =>
+      this.jamendoService.findPlaylistTracks(id),
+    );
   }
 }

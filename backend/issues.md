@@ -935,7 +935,7 @@ Acceptance Criteria
 - Auth endpoints and Jamendo endpoints are documented.
 - Protected endpoints show bearer token authentication.
 
-#### name: [backend] Rate limiting and caching - Not Started
+#### name: [backend] Rate limiting and caching - Done
 
 Goal
 
