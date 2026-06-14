@@ -190,26 +190,21 @@ Handle singles carefully. Jamendo documents that singles may have empty `album_i
 
 ## Suggested Backend Routes
 
-Expose app-focused routes instead of blindly proxying every upstream query.
+Expose app-focused catalog routes instead of blindly proxying every upstream query or exposing provider-specific route names to the frontend.
 
-- `GET /jamendo/search/tracks`
-- `GET /jamendo/tracks/:id`
-- `GET /jamendo/tracks/:id/similar`
-- `GET /jamendo/tracks/:id/file`
-- `GET /jamendo/albums`
-- `GET /jamendo/albums/:id/tracks`
-- `GET /jamendo/artists`
-- `GET /jamendo/artists/:id/tracks`
-- `GET /jamendo/autocomplete`
-- `GET /jamendo/playlists`
-- `GET /jamendo/playlists/:id/tracks`
-- `GET /jamendo/me`
-- `GET /jamendo/me/tracks`
-- `POST /jamendo/me/fan`
-- `POST /jamendo/me/favorite`
-- `POST /jamendo/me/like`
-- `POST /jamendo/me/dislike`
-- `POST /jamendo/me/myalbum`
+- `GET /catalog/search/tracks`
+- `GET /catalog/tracks/:id`
+- `GET /catalog/tracks/:id/similar`
+- `GET /catalog/tracks/:id/file`
+- `GET /catalog/albums`
+- `GET /catalog/albums/:id/tracks`
+- `GET /catalog/artists`
+- `GET /catalog/artists/:id/tracks`
+- `GET /catalog/autocomplete`
+- `GET /catalog/playlists`
+- `GET /catalog/playlists/:id/tracks`
+
+If user-specific Jamendo OAuth actions are added later, keep provider-specific OAuth/write logic behind backend services and expose product-focused routes.
 
 If full upstream parity is required, keep it behind one internal client with one DTO per upstream endpoint.
 

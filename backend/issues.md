@@ -459,7 +459,7 @@ Search Jamendo tracks for the app search UI.
 
 Tasks
 
-- Keep or complete `GET /jamendo/search/tracks`.
+- Keep or complete `GET /catalog/search/tracks`.
 - Validate `search`, `limit`, and `offset`.
 - Include music info when needed.
 - Return `count` and normalized track results.
@@ -479,8 +479,8 @@ Load one Jamendo track and similar tracks.
 
 Tasks
 
-- Keep or complete `GET /jamendo/tracks/:id`.
-- Keep or complete `GET /jamendo/tracks/:id/similar`.
+- Keep or complete `GET /catalog/tracks/:id`.
+- Keep or complete `GET /catalog/tracks/:id/similar`.
 - Return `404` or a clear empty response when a track is missing.
 - Normalize all returned tracks.
 
@@ -497,7 +497,7 @@ Provide a backend route for Jamendo track file playback or download redirects.
 
 Tasks
 
-- Add `GET /jamendo/tracks/:id/file`.
+- Add `GET /catalog/tracks/:id/file`.
 - Call Jamendo `/tracks/file`.
 - Redirect to the upstream file URL when allowed.
 - Return a clear error for unavailable files.
@@ -516,8 +516,8 @@ Support album browsing and album detail pages.
 
 Tasks
 
-- Add `GET /jamendo/albums`.
-- Add `GET /jamendo/albums/:id/tracks`.
+- Add `GET /catalog/albums`.
+- Add `GET /catalog/albums/:id/tracks`.
 - Validate pagination and filters.
 - Normalize album cover, title, release date, artist, track count, and tracks.
 - Handle singles or missing album images gracefully.
@@ -535,8 +535,8 @@ Support artist detail pages with tracks and albums.
 
 Tasks
 
-- Add `GET /jamendo/artists`.
-- Add `GET /jamendo/artists/:id/tracks`.
+- Add `GET /catalog/artists`.
+- Add `GET /catalog/artists/:id/tracks`.
 - Add artist albums support using Jamendo artist album data.
 - Normalize artist ID, name, photo, biography if available, album count, tracks, and albums.
 - Add fallback values for missing artist images or biography.
@@ -555,7 +555,7 @@ Return autocomplete suggestions for search input.
 
 Tasks
 
-- Add `GET /jamendo/autocomplete`.
+- Add `GET /catalog/autocomplete`.
 - Validate `prefix`.
 - Return grouped or normalized suggestions for tracks, albums, artists, and tags.
 - Limit response size for fast UI usage.
@@ -573,8 +573,8 @@ Expose public Jamendo playlists and playlist tracks.
 
 Tasks
 
-- Add `GET /jamendo/playlists`.
-- Add `GET /jamendo/playlists/:id/tracks`.
+- Add `GET /catalog/playlists`.
+- Add `GET /catalog/playlists/:id/tracks`.
 - Normalize playlist name, image if available, author, track count, and tracks.
 - Preserve license and attribution data for returned tracks.
 

@@ -9,6 +9,7 @@ import { HealthModule } from './health/health.module';
 import { TracksModule } from './tracks/tracks.module';
 import { PlaylistsModule } from './playlists/playlists.module';
 import { RecentlyPlayedModule } from './recently-played/recently-played.module';
+import { CatalogModule } from './catalog/catalog.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { RecentlyPlayedModule } from './recently-played/recently-played.module';
     TracksModule,
     PlaylistsModule,
     RecentlyPlayedModule,
+    CatalogModule,
   ],
 })
 export class AppModule {}

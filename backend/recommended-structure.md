@@ -66,10 +66,14 @@ Done
     playlists.service.ts
     dto/
 
+  catalog/
+    catalog.module.ts
+    catalog.controller.ts
+    catalog.service.ts
+
 Done
   jamendo/
     jamendo.module.ts
-    jamendo.controller.ts
     jamendo.service.ts
     jamendo.client.ts
     dto/
@@ -172,9 +176,27 @@ Endpoints:
 - `DELETE /playlists/:id/tracks/:trackId`
 - `PUT /playlists/:id/tracks/reorder`
 
+### Catalog
+
+Owns the frontend-facing public music catalog API. The frontend should call catalog routes instead of provider-specific routes.
+
+Suggested app routes:
+
+- `GET /catalog/search/tracks`
+- `GET /catalog/tracks/:id`
+- `GET /catalog/tracks/:id/similar`
+- `GET /catalog/tracks/:id/file`
+- `GET /catalog/albums`
+- `GET /catalog/albums/:id/tracks`
+- `GET /catalog/artists`
+- `GET /catalog/artists/:id/tracks`
+- `GET /catalog/autocomplete`
+- `GET /catalog/playlists`
+- `GET /catalog/playlists/:id/tracks`
+
 ### Jamendo
 
-Owns all Jamendo API communication and normalization. The rest of the app should not build Jamendo URLs directly.
+Owns all internal Jamendo API communication and normalization. The rest of the app should not build Jamendo URLs directly.
 
 Responsibilities:
 
@@ -184,20 +206,6 @@ Responsibilities:
 - Error mapping.
 - OAuth token handling if user-specific Jamendo writes are implemented.
 - Preserving license and attribution fields.
-
-Suggested app routes:
-
-- `GET /jamendo/search/tracks`
-- `GET /jamendo/tracks/:id`
-- `GET /jamendo/tracks/:id/similar`
-- `GET /jamendo/tracks/:id/file`
-- `GET /jamendo/albums`
-- `GET /jamendo/albums/:id/tracks`
-- `GET /jamendo/artists`
-- `GET /jamendo/artists/:id/tracks`
-- `GET /jamendo/autocomplete`
-- `GET /jamendo/playlists`
-- `GET /jamendo/playlists/:id/tracks`
 
 ### Recently Played
 
