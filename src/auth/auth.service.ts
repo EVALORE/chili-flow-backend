@@ -7,7 +7,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import * as argon2 from 'argon2';
-import { UserModel } from '../../prisma/generated/models';
+import type { UserModel } from '../../prisma/generated/models';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { LoginDto } from './dto/login.dto';
 
@@ -27,10 +27,20 @@ export class AuthService {
 
     const passwordHash = await argon2.hash(password);
 
-    const user = await this.usersService.createUser({
-      email,
-      passwordHash,
-    });
+    let user: UserModel;
+
+    try {
+      user = await this.usersService.createUser({
+        email,
+        passwordHash,
+      });
+    } catch (error) {
+      if (isUniqueConstraintError(error)) {
+        throw new ConflictException('Email is already registered');
+      }
+
+      throw error;
+    }
 
     return this._buildAuthResponse(user);
   }
@@ -62,4 +72,13 @@ export class AuthService {
       accessToken,
     };
   }
+}
+
+function isUniqueConstraintError(error: unknown) {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    error.code === 'P2002'
+  );
 }

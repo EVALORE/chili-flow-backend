@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -8,12 +9,15 @@ import { TracksRepository } from './tracks.repository';
 import { UploadTrackDto } from './dto/upload-track.dto';
 import { join, resolve } from 'node:path';
 import { unlink, mkdir, writeFile } from 'node:fs/promises';
+import { URL } from 'node:url';
 import { validateAudioFileAndCreateStoredFilename } from './storage/audio-file.storage';
 import { UploadedTrackResponseDto } from './dto/uploaded-track-response.dto';
-import { UploadedTrackModel } from '../../prisma/generated/models';
+import type { UploadedTrackModel } from '../../prisma/generated/models';
 
 @Injectable()
 export class TracksService {
+  private readonly logger = new Logger(TracksService.name);
+
   constructor(
     private readonly tracksRepository: TracksRepository,
     private readonly configService: ConfigService,
@@ -71,8 +75,8 @@ export class TracksService {
       throw new NotFoundException('Track not found');
     }
 
-    await this._deleteStoredFile(track.filePath);
     await this.tracksRepository.deleteById(track.id);
+    await this._deleteStoredFileBestEffort(track.filePath);
 
     return { deleted: true };
   }
@@ -94,6 +98,19 @@ export class TracksService {
       if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
         throw error;
       }
+    }
+  }
+
+  private async _deleteStoredFileBestEffort(filePath: string) {
+    try {
+      await unlink(filePath);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+        return;
+      }
+
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Failed to delete uploaded audio file: ${message}`);
     }
   }
 

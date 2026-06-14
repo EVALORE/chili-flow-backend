@@ -71,10 +71,26 @@ export class PlaylistsRepository {
         where: { id: trackId, playlistId },
       });
 
+      if (result.count === 0) {
+        return false;
+      }
+
       const tracks = await tx.playlistTrack.findMany({
         where: { playlistId },
         orderBy: { position: 'asc' },
       });
+
+      const temporaryOffset =
+        Math.max(...tracks.map((track) => track.position), -1) + 1;
+
+      await Promise.all(
+        tracks.map((track, index) =>
+          tx.playlistTrack.update({
+            where: { id: track.id },
+            data: { position: index + temporaryOffset },
+          }),
+        ),
+      );
 
       await Promise.all(
         tracks.map((track, index) =>
@@ -85,7 +101,7 @@ export class PlaylistsRepository {
         ),
       );
 
-      return result.count > 0;
+      return true;
     });
   }
 

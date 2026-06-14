@@ -1,10 +1,15 @@
 import { BadRequestException } from '@nestjs/common';
+import type { Buffer } from 'node:buffer';
 import { randomUUID } from 'node:crypto';
 import { extname } from 'node:path';
 
 interface UploadFileForFilter {
   mimetype: string;
   originalname: string;
+}
+
+interface UploadFileForValidation extends UploadFileForFilter {
+  buffer: Buffer;
 }
 
 interface AudioType {
@@ -81,11 +86,9 @@ export function audioFileFilter(
   callback(null, true);
 }
 
-export function validateAudioFileAndCreateStoredFilename(file: {
-  buffer: Buffer;
-  mimetype: string;
-  originalname: string;
-}) {
+export function validateAudioFileAndCreateStoredFilename(
+  file: UploadFileForValidation,
+): string {
   const mimetypeAudioType = audioTypesByMimeType.get(file.mimetype);
   const signatureAudioType = detectAudioType(file.buffer);
   const originalExtension = getOriginalExtension(file.originalname);
@@ -105,7 +108,7 @@ export function validateAudioFileAndCreateStoredFilename(file: {
   return `${randomUUID()}${signatureAudioType.canonicalExtension}`;
 }
 
-function getOriginalExtension(originalName: string) {
+function getOriginalExtension(originalName: string): string {
   return extname(originalName).toLowerCase();
 }
 
@@ -145,33 +148,33 @@ function detectAudioType(buffer: Buffer): AudioType | null {
   return null;
 }
 
-function startsWithAscii(buffer: Buffer, value: string) {
+function startsWithAscii(buffer: Buffer, value: string): boolean {
   return readsAsciiAt(buffer, value, 0);
 }
 
-function readsAsciiAt(buffer: Buffer, value: string, offset: number) {
+function readsAsciiAt(buffer: Buffer, value: string, offset: number): boolean {
   return buffer.length >= offset + value.length
     ? buffer.toString('ascii', offset, offset + value.length) === value
     : false;
 }
 
-function startsWithBytes(buffer: Buffer, bytes: readonly number[]) {
+function startsWithBytes(buffer: Buffer, bytes: readonly number[]): boolean {
   return bytes.every((byte, index) => buffer[index] === byte);
 }
 
-function isMp3Frame(buffer: Buffer) {
+function isMp3Frame(buffer: Buffer): boolean {
   return (
     buffer.length >= 2 && buffer[0] === 0xff && (buffer[1] & 0xe0) === 0xe0
   );
 }
 
-function isAacFrame(buffer: Buffer) {
+function isAacFrame(buffer: Buffer): boolean {
   return (
     buffer.length >= 2 && buffer[0] === 0xff && (buffer[1] & 0xf6) === 0xf0
   );
 }
 
-function isMp4Container(buffer: Buffer) {
+function isMp4Container(buffer: Buffer): boolean {
   if (!readsAsciiAt(buffer, 'ftyp', 4)) {
     return false;
   }
