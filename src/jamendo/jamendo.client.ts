@@ -60,20 +60,24 @@ export class JamendoClient {
     try {
       response = await fetch(url, { signal: controller.signal });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-
       if (error instanceof Error && error.name === 'AbortError') {
-        this.logger.error(`Jamendo API request timed out: ${url.pathname}`);
+        this.logUpstreamFailure('get', url.pathname, 'request timed out');
         throw new BadGatewayException('Jamendo API request timed out');
       }
 
-      this.logger.error(`Jamendo API request failed: ${message}`);
+      const message = this.getSafeErrorMessage(error);
+      this.logUpstreamFailure('get', url.pathname, message);
       throw new BadGatewayException(`Unable to reach Jamendo API: ${message}`);
     } finally {
       clearTimeout(timeout);
     }
 
     if (!response.ok) {
+      this.logUpstreamFailure(
+        'get',
+        url.pathname,
+        `status=${response.status} statusText=${response.statusText}`,
+      );
       throw new BadGatewayException(
         `Failed to fetch data from Jamendo API: ${response.status} ${response.statusText}`,
       );
@@ -84,8 +88,8 @@ export class JamendoClient {
     try {
       body = (await response.json()) as JamendoResponse<T>;
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Jamendo API returned invalid JSON: ${message}`);
+      const message = this.getSafeErrorMessage(error);
+      this.logUpstreamFailure('get', url.pathname, `invalid JSON: ${message}`);
       throw new BadGatewayException('Jamendo API returned invalid JSON');
     }
 
@@ -93,7 +97,7 @@ export class JamendoClient {
       this.logger.warn(`Jamendo API warning: ${body.headers.warnings}`);
     }
 
-    this._assertSuccess(body);
+    this._assertSuccess(url.pathname, body);
 
     return body;
   }
@@ -126,14 +130,17 @@ export class JamendoClient {
         redirect: 'manual',
       });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-
       if (error instanceof Error && error.name === 'AbortError') {
-        this.logger.error(`Jamendo API request timed out: ${url.pathname}`);
+        this.logUpstreamFailure(
+          'getRedirectUrl',
+          url.pathname,
+          'request timed out',
+        );
         throw new BadGatewayException('Jamendo API request timed out');
       }
 
-      this.logger.error(`Jamendo API request failed: ${message}`);
+      const message = this.getSafeErrorMessage(error);
+      this.logUpstreamFailure('getRedirectUrl', url.pathname, message);
       throw new BadGatewayException(`Unable to reach Jamendo API: ${message}`);
     } finally {
       clearTimeout(timeout);
@@ -144,6 +151,11 @@ export class JamendoClient {
     }
 
     if (response.status < 300 || response.status >= 400) {
+      this.logUpstreamFailure(
+        'getRedirectUrl',
+        url.pathname,
+        `status=${response.status} statusText=${response.statusText}`,
+      );
       throw new BadGatewayException(
         `Failed to fetch Jamendo file redirect: ${response.status} ${response.statusText}`,
       );
@@ -152,16 +164,23 @@ export class JamendoClient {
     const location = response.headers.get('location');
 
     if (!location) {
+      this.logUpstreamFailure(
+        'getRedirectUrl',
+        url.pathname,
+        'missing redirect location',
+      );
       throw new BadGatewayException('Jamendo API did not return a file URL');
     }
 
     return location;
   }
 
-  private _assertSuccess<T>(body: JamendoResponse<T>) {
+  private _assertSuccess<T>(path: string, body: JamendoResponse<T>) {
     if (!body.headers || typeof body.headers.code !== 'number') {
-      this.logger.error(
-        `Unexpected Jamendo API response: ${JSON.stringify(body)}`,
+      this.logUpstreamFailure(
+        'get',
+        path,
+        `unexpected response hasHeaders=${Boolean(body.headers)} resultsType=${typeof body.results}`,
       );
       throw new BadGatewayException(
         'Jamendo API returned an unexpected response',
@@ -171,6 +190,14 @@ export class JamendoClient {
     const message =
       body.headers.error_message ||
       `Jamendo API returned an error: ${body.headers.code} ${body.headers.error_message}`;
+
+    if (body.headers.code !== 0) {
+      this.logUpstreamFailure(
+        'get',
+        path,
+        `code=${body.headers.code} message=${this.sanitizeLogMessage(message)}`,
+      );
+    }
 
     switch (body.headers.code) {
       case 0:
@@ -188,5 +215,34 @@ export class JamendoClient {
       default:
         throw new BadGatewayException(message);
     }
+  }
+
+  private logUpstreamFailure(operation: string, path: string, detail: string) {
+    this.logger.error(
+      `Jamendo API failure: operation=${operation} path=${path} ${detail}`,
+    );
+  }
+
+  private getSafeErrorMessage(error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return this.sanitizeLogMessage(message);
+  }
+
+  private sanitizeLogMessage(message: string) {
+    return message
+      .replace(/bearer\s+[^\s]+/gi, 'Bearer [redacted]')
+      .replace(/client_id=[^&\s]+/gi, 'client_id=[redacted]')
+      .replace(
+        /(client_secret|password|token|secret)=([^&\s]+)/gi,
+        '$1=[redacted]',
+      )
+      .replace(/https?:\/\/\S+/gi, (rawUrl) => {
+        try {
+          const parsedUrl = new URL(rawUrl);
+          return `${parsedUrl.origin}${parsedUrl.pathname}`;
+        } catch {
+          return '[redacted-url]';
+        }
+      });
   }
 }

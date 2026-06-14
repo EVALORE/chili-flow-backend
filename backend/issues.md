@@ -953,7 +953,7 @@ Acceptance Criteria
 - Repeated public Jamendo requests do not overload the upstream API.
 - User-specific responses are not cached globally.
 
-#### name: [backend] Production error handling - Not Started
+#### name: [backend] Production error handling - Done
 
 Goal
 
