@@ -5,7 +5,13 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../common/types/authenticated-user.type';
 import { CreateRecentlyPlayedDto } from './dto/create-recently-played.dto';
 import { RecentlyPlayedQueryDto } from './dto/recently-played-query.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { RecentlyPlayedResponseDto } from './dto/recently-played-response.dto';
 
 @ApiTags('recently-played')
 @ApiBearerAuth('bearer')
@@ -15,6 +21,7 @@ export class RecentlyPlayedController {
   constructor(private readonly recentlyPlayedService: RecentlyPlayedService) {}
 
   @Post()
+  @ApiCreatedResponse({ type: RecentlyPlayedResponseDto })
   create(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: CreateRecentlyPlayedDto,
@@ -23,6 +30,7 @@ export class RecentlyPlayedController {
   }
 
   @Get()
+  @ApiOkResponse({ type: RecentlyPlayedResponseDto, isArray: true })
   list(
     @CurrentUser() user: AuthenticatedUser,
     @Query()

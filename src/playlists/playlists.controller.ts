@@ -16,7 +16,18 @@ import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { ReorderPlaylistTracksDto } from './dto/reorder-playlist-tracks.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { PlaylistsService } from './playlists.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { DeleteResponseDto } from '../common/dto/delete-response.dto';
+import {
+  PlaylistDetailResponseDto,
+  PlaylistResponseDto,
+  PlaylistSummaryResponseDto,
+} from './dto/playlist-response.dto';
 
 @ApiTags('playlists')
 @ApiBearerAuth('bearer')
@@ -26,11 +37,13 @@ export class PlaylistsController {
   constructor(private readonly playlistsService: PlaylistsService) {}
 
   @Get()
+  @ApiOkResponse({ type: PlaylistSummaryResponseDto, isArray: true })
   list(@CurrentUser() user: AuthenticatedUser) {
     return this.playlistsService.list(user.id);
   }
 
   @Post()
+  @ApiCreatedResponse({ type: PlaylistResponseDto })
   create(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: CreatePlaylistDto,
@@ -39,11 +52,13 @@ export class PlaylistsController {
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: PlaylistDetailResponseDto })
   findOne(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
     return this.playlistsService.findOne(user.id, id);
   }
 
   @Put(':id')
+  @ApiOkResponse({ type: PlaylistResponseDto })
   update(
     @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
@@ -53,11 +68,13 @@ export class PlaylistsController {
   }
 
   @Delete(':id')
+  @ApiOkResponse({ type: DeleteResponseDto })
   delete(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
     return this.playlistsService.delete(user.id, id);
   }
 
   @Post(':id/tracks')
+  @ApiCreatedResponse({ type: PlaylistDetailResponseDto })
   addTrack(
     @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
@@ -67,6 +84,7 @@ export class PlaylistsController {
   }
 
   @Delete(':id/tracks/:trackId')
+  @ApiOkResponse({ type: PlaylistDetailResponseDto })
   removeTrack(
     @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
@@ -76,6 +94,7 @@ export class PlaylistsController {
   }
 
   @Put(':id/tracks/reorder')
+  @ApiOkResponse({ type: PlaylistDetailResponseDto })
   reorderTracks(
     @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,

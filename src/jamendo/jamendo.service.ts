@@ -231,7 +231,7 @@ export class JamendoService {
         id,
         limit: 1,
         imagesize: 300,
-        audioforamt: 'mp32',
+        audioformat: 'mp32',
         audiodlformat: 'mp32',
         include: 'musicinfo',
       },

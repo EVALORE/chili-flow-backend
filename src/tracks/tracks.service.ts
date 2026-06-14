@@ -8,7 +8,7 @@ import { TracksRepository } from './tracks.repository';
 import { UploadTrackDto } from './dto/upload-track.dto';
 import { join, resolve } from 'node:path';
 import { unlink, mkdir, writeFile } from 'node:fs/promises';
-import { createStoredAudioFilename } from './storage/audio-file.storage';
+import { validateAudioFileAndCreateStoredFilename } from './storage/audio-file.storage';
 import { UploadedTrackResponseDto } from './dto/uploaded-track-response.dto';
 import { UploadedTrackModel } from '../../prisma/generated/models';
 
@@ -33,7 +33,7 @@ export class TracksService {
     );
     await mkdir(uploadsDir, { recursive: true });
 
-    const filename = createStoredAudioFilename(file.originalname);
+    const filename = validateAudioFileAndCreateStoredFilename(file);
     const filePath = join(uploadsDir, filename);
     const publicUrl = new URL(
       `/uploads/${filename}`,

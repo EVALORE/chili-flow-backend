@@ -6,8 +6,7 @@ export class AuthResponseDto {
   user!: UserResponseDto;
 
   @ApiProperty({
-    example:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.example.signature',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.example.signature',
   })
   accessToken!: string;
 }

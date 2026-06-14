@@ -46,7 +46,18 @@ export class PlaylistsRepository {
     },
   ) {
     return this.prisma.$transaction(async (tx) => {
-      const position = await tx.playlistTrack.count({ where: { playlistId } });
+      await tx.$queryRaw`
+        SELECT "id"
+        FROM "Playlist"
+        WHERE "id" = ${playlistId}
+        FOR UPDATE
+      `;
+
+      const { _max } = await tx.playlistTrack.aggregate({
+        where: { playlistId },
+        _max: { position: true },
+      });
+      const position = (_max.position ?? -1) + 1;
 
       return tx.playlistTrack.create({
         data: { playlistId, position, ...data },

@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import type { Response } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -19,6 +20,9 @@ async function bootstrap() {
 
   app.useStaticAssets(configService.getOrThrow<string>('uploads.dir'), {
     prefix: '/uploads/',
+    setHeaders: (response: Response) => {
+      response.setHeader('X-Content-Type-Options', 'nosniff');
+    },
   });
 
   app.useGlobalPipes(

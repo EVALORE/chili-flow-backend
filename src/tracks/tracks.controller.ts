@@ -17,7 +17,16 @@ import { audioFileFilter } from './storage/audio-file.storage';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../common/types/authenticated-user.type';
 import { UploadTrackDto } from './dto/upload-track.dto';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { UploadedTrackResponseDto } from './dto/uploaded-track-response.dto';
+import { DeleteResponseDto } from '../common/dto/delete-response.dto';
 
 @ApiTags('tracks')
 @ApiBearerAuth('bearer')
@@ -28,6 +37,7 @@ export class TracksController {
 
   @Post('upload')
   @ApiConsumes('multipart/form-data')
+  @ApiCreatedResponse({ type: UploadedTrackResponseDto })
   @ApiBody({
     schema: {
       type: 'object',
@@ -59,11 +69,13 @@ export class TracksController {
   }
 
   @Get()
+  @ApiOkResponse({ type: UploadedTrackResponseDto, isArray: true })
   list(@CurrentUser() user: AuthenticatedUser) {
     return this.tracksService.list(user.id);
   }
 
   @Delete(':id')
+  @ApiOkResponse({ type: DeleteResponseDto })
   delete(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
     return this.tracksService.delete(user.id, id);
   }

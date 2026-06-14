@@ -1,6 +1,8 @@
 import {
   BadGatewayException,
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   Logger,
   UnauthorizedException,
@@ -41,7 +43,7 @@ export class JamendoClient {
 
       if (Array.isArray(value)) {
         for (const item of value) {
-          url.searchParams.append(key, item);
+          url.searchParams.append(key, String(item));
         }
 
         continue;
@@ -175,9 +177,10 @@ export class JamendoClient {
         return;
       case 3:
       case 4:
-      case 6:
       case 7:
         throw new BadRequestException(message);
+      case 6:
+        throw new HttpException(message, HttpStatus.TOO_MANY_REQUESTS);
       case 5:
       case 12:
       case 13:
