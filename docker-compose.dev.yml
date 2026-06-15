@@ -1,0 +1,15 @@
+services:
+  postgres-db:
+    image: postgres:latest
+    container_name: chili-flow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: chili_flow
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql1
+
+volumes:
+  postgres_data:
