@@ -1,4 +1,11 @@
-import { Controller, Get, Param, Query, Redirect } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  Redirect,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiExtraModels,
   ApiFoundResponse,
@@ -21,10 +28,12 @@ import {
   CatalogTrackListResponseDto,
   CatalogTrackResponseDto,
 } from './dto/catalog-response.dto';
+import { CatalogRateLimitGuard } from './catalog-rate-limit.guard';
 import { CatalogService } from './catalog.service';
 
 @ApiTags('catalog')
 @ApiExtraModels(CatalogTrackResponseDto)
+@UseGuards(CatalogRateLimitGuard)
 @Controller('catalog')
 export class CatalogController {
   constructor(private readonly catalogService: CatalogService) {}

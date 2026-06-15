@@ -15,6 +15,16 @@ export default () => ({
     apiBaseUrl:
       process.env.JAMENDO_API_BASE_URL || 'https://api.jamendo.com/v3.0',
   },
+  catalog: {
+    rateLimitWindowSeconds: Number(
+      process.env.CATALOG_RATE_LIMIT_WINDOW_SECONDS ?? '60',
+    ),
+    rateLimitMaxRequests: Number(
+      process.env.CATALOG_RATE_LIMIT_MAX_REQUESTS ?? '120',
+    ),
+    cacheTtlSeconds: Number(process.env.CATALOG_CACHE_TTL_SECONDS ?? '60'),
+    cacheMaxEntries: Number(process.env.CATALOG_CACHE_MAX_ENTRIES ?? '500'),
+  },
   database: {
     url: process.env.DATABASE_URL,
   },

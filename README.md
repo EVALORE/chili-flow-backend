@@ -49,19 +49,23 @@ The default local API URL is `http://localhost:3000`.
 
 ## Environment Variables
 
-| Variable | Required | Example | Notes |
-| --- | --- | --- | --- |
-| `NODE_ENV` | No | `development` | Allowed values are `development`, `test`, and `production`. Defaults to `development`. |
-| `PORT` | No | `3000` | Defaults to `3000`. |
-| `JWT_SECRET` | Yes | `replace-with-local-secret` | Use a strong secret outside local development. |
-| `DATABASE_URL` | Yes | `postgresql://postgres:postgres@localhost:5432/chili_flow?schema=public` | PostgreSQL connection used by Prisma. |
-| `UPLOADS_DIR` | Yes | `./uploads` | Directory where uploaded audio files are stored. |
-| `PUBLIC_BACKEND_URL` | Yes | `http://localhost:3000` | Base URL used to build public uploaded file URLs. |
-| `FRONTEND_ORIGIN` | No | `http://localhost:5173` | CORS origin for the frontend. Defaults to `http://localhost:5173`. |
-| `JAMENDO_CLIENT_ID` | Yes | `replace-with-jamendo-client-id` | Required for Jamendo read API calls. |
-| `JAMENDO_API_BASE_URL` | No | `https://api.jamendo.com/v3.0` | Defaults to the Jamendo v3 API URL. |
-| `JAMENDO_CLIENT_SECRET` | No | empty | Reserved for future Jamendo OAuth/write actions. |
-| `JAMENDO_REDIRECT_URI` | No | empty | Reserved for future Jamendo OAuth/write actions. |
+| Variable                            | Required | Example                                                                  | Notes                                                                                  |
+| ----------------------------------- | -------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| `NODE_ENV`                          | No       | `development`                                                            | Allowed values are `development`, `test`, and `production`. Defaults to `development`. |
+| `PORT`                              | No       | `3000`                                                                   | Defaults to `3000`.                                                                    |
+| `JWT_SECRET`                        | Yes      | `replace-with-local-secret`                                              | Use a strong secret outside local development.                                         |
+| `DATABASE_URL`                      | Yes      | `postgresql://postgres:postgres@localhost:5432/chili_flow?schema=public` | PostgreSQL connection used by Prisma.                                                  |
+| `UPLOADS_DIR`                       | Yes      | `./uploads`                                                              | Directory where uploaded audio files are stored.                                       |
+| `PUBLIC_BACKEND_URL`                | Yes      | `http://localhost:3000`                                                  | Base URL used to build public uploaded file URLs.                                      |
+| `FRONTEND_ORIGIN`                   | No       | `http://localhost:5173`                                                  | CORS origin for the frontend. Defaults to `http://localhost:5173`.                     |
+| `JAMENDO_CLIENT_ID`                 | Yes      | `replace-with-jamendo-client-id`                                         | Required for Jamendo read API calls.                                                   |
+| `JAMENDO_API_BASE_URL`              | No       | `https://api.jamendo.com/v3.0`                                           | Defaults to the Jamendo v3 API URL.                                                    |
+| `JAMENDO_CLIENT_SECRET`             | No       | empty                                                                    | Reserved for future Jamendo OAuth/write actions.                                       |
+| `JAMENDO_REDIRECT_URI`              | No       | empty                                                                    | Reserved for future Jamendo OAuth/write actions.                                       |
+| `CATALOG_RATE_LIMIT_WINDOW_SECONDS` | No       | `60`                                                                     | Window used to rate-limit public catalog routes.                                       |
+| `CATALOG_RATE_LIMIT_MAX_REQUESTS`   | No       | `120`                                                                    | Maximum catalog requests per client IP per window.                                     |
+| `CATALOG_CACHE_TTL_SECONDS`         | No       | `60`                                                                     | In-memory cache TTL for Jamendo catalog responses. Set to `0` to disable caching.      |
+| `CATALOG_CACHE_MAX_ENTRIES`         | No       | `500`                                                                    | Maximum in-memory Jamendo catalog cache entries before oldest entries are evicted.     |
 
 ## Database
 
@@ -153,7 +157,8 @@ Recently played routes require a bearer JWT and are scoped to the current user.
 
 Catalog routes are read-only wrappers around Jamendo. The backend injects the
 Jamendo `client_id`, normalizes responses for the app, maps upstream errors to
-HTTP errors, and does not expose Jamendo secrets.
+HTTP errors, rate-limits public catalog traffic by client IP, caches successful
+catalog responses briefly, and does not expose Jamendo secrets.
 
 ## Development Commands
 
@@ -176,3 +181,4 @@ pnpm run format
 - Configure `PUBLIC_BACKEND_URL` to the deployed backend origin.
 - Use persistent storage for `UPLOADS_DIR`.
 - Restrict `FRONTEND_ORIGIN` to the deployed frontend origin.
+- Tune catalog rate-limit and cache environment values for the deployment size.

@@ -54,6 +54,26 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   FRONTEND_ORIGIN?: string;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  CATALOG_RATE_LIMIT_WINDOW_SECONDS?: number;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  CATALOG_RATE_LIMIT_MAX_REQUESTS?: number;
+
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  CATALOG_CACHE_TTL_SECONDS?: number;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  CATALOG_CACHE_MAX_ENTRIES?: number;
 }
 
 export function validateEnv(config: Record<string, unknown>) {
