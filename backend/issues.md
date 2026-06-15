@@ -11,7 +11,7 @@ Use these as GitHub/Jira issues. The top-level items can be parent issues or epi
 5. `[backend] Jamendo read API` - Done
 6. `[backend] Playlists` - Done
 7. `[backend] Recently played` - Done
-8. `[backend] Testing, docs, and production hardening` - In Progress
+8. `[backend] Testing, docs, and production hardening` - Done
 
 ---
 
@@ -843,7 +843,7 @@ Acceptance Criteria
 
 ---
 
-## name: [backend] Testing, docs, and production hardening - In Progress
+## name: [backend] Testing, docs, and production hardening - Done
 
 ### Goal
 
@@ -870,7 +870,7 @@ Make the backend reliable enough for feature integration and deployment.
 
 ### Sub-issues
 
-#### name: [backend] API test coverage - Not Started
+#### name: [backend] API test coverage - Done
 
 Goal
 
