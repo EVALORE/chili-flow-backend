@@ -192,7 +192,7 @@ Handle singles carefully. Jamendo documents that singles may have empty `album_i
 
 Expose app-focused catalog routes instead of blindly proxying every upstream query or exposing provider-specific route names to the frontend.
 
-- `GET /catalog/search/tracks`
+- `GET /catalog/tracks`
 - `GET /catalog/tracks/:id`
 - `GET /catalog/tracks/:id/similar`
 - `GET /catalog/tracks/:id/file`

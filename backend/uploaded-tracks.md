@@ -6,9 +6,9 @@ Allow authenticated users to upload, list, play, and delete their own audio trac
 
 ## Endpoints
 
-- `POST /tracks/upload`
-- `GET /tracks`
-- `DELETE /tracks/:id`
+- `POST /uploaded-tracks`
+- `GET /uploaded-tracks`
+- `DELETE /uploaded-tracks/:uploadedTrackId`
 
 ## Upload Fields
 

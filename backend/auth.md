@@ -15,7 +15,7 @@ Allow users to register, log in, and access protected backend resources with JWT
 - Hash password before storage.
 - Reject duplicate email.
 - Validate login credentials.
-- Return JWT after successful login.
+- Issue authentication using the configured cookie, bearer, or combined transport.
 - Return basic user profile without password.
 - Add JWT guard for protected endpoints.
 - Add current-user extraction for controllers.
@@ -24,5 +24,5 @@ Allow users to register, log in, and access protected backend resources with JWT
 
 - Duplicate emails are rejected.
 - Invalid credentials are rejected.
-- JWT is required for protected endpoints.
+- A JWT supplied through an enabled authentication transport is required for protected endpoints.
 - Password hashes are never returned by the API.

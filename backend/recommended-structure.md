@@ -157,13 +157,13 @@ Owns uploaded track behavior:
 
 Endpoints:
 
-- `POST /tracks/upload`
-- `GET /tracks`
-- `DELETE /tracks/:id`
+- `POST /uploaded-tracks`
+- `GET /uploaded-tracks`
+- `DELETE /uploaded-tracks/:uploadedTrackId`
 
 ### Playlists
 
-Owns local playlists, playlist tracks, ordering, and user ownership checks.
+Owns local playlists, playlist items, ordering, and user ownership checks.
 
 Endpoints:
 
@@ -172,9 +172,9 @@ Endpoints:
 - `GET /playlists/:id`
 - `PUT /playlists/:id`
 - `DELETE /playlists/:id`
-- `POST /playlists/:id/tracks`
-- `DELETE /playlists/:id/tracks/:trackId`
-- `PUT /playlists/:id/tracks/reorder`
+- `POST /playlists/:id/items`
+- `DELETE /playlists/:id/items/:playlistItemId`
+- `PUT /playlists/:id/items/reorder`
 
 ### Catalog
 
@@ -182,7 +182,7 @@ Owns the frontend-facing public music catalog API. The frontend should call cata
 
 Suggested app routes:
 
-- `GET /catalog/search/tracks`
+- `GET /catalog/tracks`
 - `GET /catalog/tracks/:id`
 - `GET /catalog/tracks/:id/similar`
 - `GET /catalog/tracks/:id/file`
