@@ -12,7 +12,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.enableCors({
-    origin: configService.getOrThrow<string>('app.frontendOrigin'),
+    origin: configService.getOrThrow<string[]>('app.frontendOrigins'),
     credentials: true,
   });
 
@@ -38,7 +38,7 @@ async function bootstrap() {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Chili Flow API')
       .setDescription(
-        'Backend API for auth, tracks, Jamendo, playlists, and recently played history.',
+        'Backend API for auth, local uploaded tracks, external Jamendo catalog content, playlist items, and recently played history.',
       )
       .setVersion('1.0')
       .addBearerAuth(
@@ -49,6 +49,10 @@ async function bootstrap() {
         },
         'bearer',
       )
+      .addCookieAuth('chili_flow_session', {
+        type: 'apiKey',
+        in: 'cookie',
+      })
       .build();
 
     const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);

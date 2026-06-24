@@ -7,6 +7,7 @@ import {
   validateSync,
 } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
+import { AuthTransport } from './auth-transport';
 
 enum Environment {
   Development = 'development',
@@ -26,6 +27,10 @@ class EnvironmentVariables {
 
   @IsString()
   JWT_SECRET!: string;
+
+  @IsEnum(AuthTransport)
+  @IsOptional()
+  AUTH_TRANSPORT?: AuthTransport;
 
   @IsString()
   DATABASE_URL!: string;

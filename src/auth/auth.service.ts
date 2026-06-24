@@ -8,8 +8,13 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import * as argon2 from 'argon2';
 import type { UserModel } from '../../prisma/generated/models';
-import { AuthResponseDto } from './dto/auth-response.dto';
 import { LoginDto } from './dto/login.dto';
+import { UserResponseDto } from '../users/dto/user-response.dto';
+
+export interface AuthSession {
+  user: UserResponseDto;
+  accessToken: string;
+}
 
 @Injectable()
 export class AuthService {
@@ -18,7 +23,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register({ email, password }: RegisterDto): Promise<AuthResponseDto> {
+  async register({ email, password }: RegisterDto): Promise<AuthSession> {
     const existingUser = await this.usersService.findByEmail(email);
 
     if (existingUser) {
@@ -45,7 +50,7 @@ export class AuthService {
     return this._buildAuthResponse(user);
   }
 
-  async login({ email, password }: LoginDto): Promise<AuthResponseDto> {
+  async login({ email, password }: LoginDto): Promise<AuthSession> {
     const user = await this.usersService.findByEmail(email);
 
     if (!user) {
@@ -61,7 +66,7 @@ export class AuthService {
     return this._buildAuthResponse(user);
   }
 
-  private async _buildAuthResponse(user: UserModel): Promise<AuthResponseDto> {
+  private async _buildAuthResponse(user: UserModel): Promise<AuthSession> {
     const accessToken = await this.jwtService.signAsync({
       sub: user.id,
       email: user.email,

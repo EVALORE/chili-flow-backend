@@ -1,34 +1,66 @@
-export default () => ({
-  app: {
-    nodeEnv: process.env.NODE_ENV || 'development',
-    port: Number(process.env.PORT ?? '3000'),
-    frontendOrigin: process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
-  },
-  uploads: {
-    dir: process.env.UPLOADS_DIR,
-    publicBackendUrl: process.env.PUBLIC_BACKEND_URL,
-  },
-  jamendo: {
-    clientId: process.env.JAMENDO_CLIENT_ID,
-    clientSecret: process.env.JAMENDO_CLIENT_SECRET,
-    redirectUri: process.env.JAMENDO_REDIRECT_URI,
-    apiBaseUrl:
-      process.env.JAMENDO_API_BASE_URL || 'https://api.jamendo.com/v3.0',
-  },
-  catalog: {
-    rateLimitWindowSeconds: Number(
-      process.env.CATALOG_RATE_LIMIT_WINDOW_SECONDS ?? '60',
-    ),
-    rateLimitMaxRequests: Number(
-      process.env.CATALOG_RATE_LIMIT_MAX_REQUESTS ?? '120',
-    ),
-    cacheTtlSeconds: Number(process.env.CATALOG_CACHE_TTL_SECONDS ?? '60'),
-    cacheMaxEntries: Number(process.env.CATALOG_CACHE_MAX_ENTRIES ?? '500'),
-  },
-  database: {
-    url: process.env.DATABASE_URL,
-  },
-  auth: {
-    jwtSecret: process.env.JWT_SECRET,
-  },
-});
+import { AuthTransport } from './auth-transport';
+
+const DEFAULT_FRONTEND_ORIGINS = [
+  'http://localhost:4200',
+  'http://127.0.0.1:4200',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+];
+
+export default () => {
+  const frontendOrigins = parseFrontendOrigins(process.env.FRONTEND_ORIGIN);
+
+  return {
+    app: {
+      nodeEnv: process.env.NODE_ENV || 'development',
+      port: Number(process.env.PORT ?? '3000'),
+      frontendOrigins,
+      frontendOrigin: frontendOrigins[0],
+    },
+    uploads: {
+      dir: process.env.UPLOADS_DIR,
+      publicBackendUrl: process.env.PUBLIC_BACKEND_URL,
+    },
+    jamendo: {
+      clientId: process.env.JAMENDO_CLIENT_ID,
+      clientSecret: process.env.JAMENDO_CLIENT_SECRET,
+      redirectUri: process.env.JAMENDO_REDIRECT_URI,
+      apiBaseUrl:
+        process.env.JAMENDO_API_BASE_URL || 'https://api.jamendo.com/v3.0',
+    },
+    catalog: {
+      rateLimitWindowSeconds: Number(
+        process.env.CATALOG_RATE_LIMIT_WINDOW_SECONDS ?? '60',
+      ),
+      rateLimitMaxRequests: Number(
+        process.env.CATALOG_RATE_LIMIT_MAX_REQUESTS ?? '120',
+      ),
+      cacheTtlSeconds: Number(process.env.CATALOG_CACHE_TTL_SECONDS ?? '60'),
+      cacheMaxEntries: Number(process.env.CATALOG_CACHE_MAX_ENTRIES ?? '500'),
+    },
+    database: {
+      url: process.env.DATABASE_URL,
+    },
+    auth: {
+      jwtSecret: process.env.JWT_SECRET,
+      transport:
+        process.env.AUTH_TRANSPORT ||
+        (process.env.NODE_ENV === 'production'
+          ? AuthTransport.Cookie
+          : AuthTransport.Both),
+    },
+  };
+};
+
+function parseFrontendOrigins(value: string | undefined): string[] {
+  if (!value) {
+    return DEFAULT_FRONTEND_ORIGINS;
+  }
+
+  const origins = value
+    .split(',')
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
+
+  return origins.length > 0 ? origins : DEFAULT_FRONTEND_ORIGINS;
+}

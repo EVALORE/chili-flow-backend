@@ -7,6 +7,8 @@ export class AuthResponseDto {
 
   @ApiProperty({
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.example.signature',
+    required: false,
+    description: 'Returned when bearer authentication is enabled.',
   })
-  accessToken!: string;
+  accessToken?: string;
 }
