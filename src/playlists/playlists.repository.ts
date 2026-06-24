@@ -33,7 +33,7 @@ export class PlaylistsRepository {
     return this.prisma.playlist.delete({ where: { id } });
   }
 
-  async addTrack(
+  async addItem(
     playlistId: string,
     data: {
       source: typeof TrackSource.JAMENDO | typeof TrackSource.UPLOADED;
@@ -65,10 +65,10 @@ export class PlaylistsRepository {
     });
   }
 
-  async removeTrack(playlistId: string, trackId: string) {
+  async removeItem(playlistId: string, playlistItemId: string) {
     return this.prisma.$transaction(async (tx) => {
       const result = await tx.playlistTrack.deleteMany({
-        where: { id: trackId, playlistId },
+        where: { id: playlistItemId, playlistId },
       });
 
       if (result.count === 0) {
@@ -105,21 +105,21 @@ export class PlaylistsRepository {
     });
   }
 
-  async reorderTracks(playlistId: string, trackIds: string[]) {
+  async reorderItems(playlistId: string, playlistItemIds: string[]) {
     return this.prisma.$transaction(async (tx) => {
       await Promise.all(
-        trackIds.map((trackId, index) =>
+        playlistItemIds.map((playlistItemId, index) =>
           tx.playlistTrack.update({
-            where: { id: trackId },
-            data: { position: index + trackIds.length },
+            where: { id: playlistItemId },
+            data: { position: index + playlistItemIds.length },
           }),
         ),
       );
 
       await Promise.all(
-        trackIds.map((trackId, index) =>
+        playlistItemIds.map((playlistItemId, index) =>
           tx.playlistTrack.update({
-            where: { id: trackId },
+            where: { id: playlistItemId },
             data: { position: index },
           }),
         ),

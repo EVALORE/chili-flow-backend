@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TrackSource } from '../../prisma/generated/enums';
 import { JamendoService } from '../jamendo/jamendo.service';
-import { TracksService } from '../tracks/tracks.service';
+import { UploadedTracksService } from '../uploaded-tracks/uploaded-tracks.service';
 import { PlaylistsRepository } from './playlists.repository';
 import { PlaylistsService } from './playlists.service';
 
@@ -53,14 +53,14 @@ describe('PlaylistsService', () => {
       findOwnedById: jest.fn(),
       updateById: jest.fn(),
       deleteById: jest.fn(),
-      addTrack: jest.fn(),
-      removeTrack: jest.fn(),
-      reorderTracks: jest.fn(),
+      addItem: jest.fn(),
+      removeItem: jest.fn(),
+      reorderItems: jest.fn(),
     } as unknown as jest.Mocked<PlaylistsRepository>;
 
-    const tracksService = {
-      findOwnedTrack: jest.fn(),
-    } as unknown as jest.Mocked<TracksService>;
+    const uploadedTracksService = {
+      findOwnedUploadedTrack: jest.fn(),
+    } as unknown as jest.Mocked<UploadedTracksService>;
 
     const jamendoService = {
       findTrack: jest.fn(),
@@ -71,10 +71,10 @@ describe('PlaylistsService', () => {
       playlistsRepository,
       service: new PlaylistsService(
         playlistsRepository,
-        tracksService,
+        uploadedTracksService,
         jamendoService,
       ),
-      tracksService,
+      uploadedTracksService,
     };
   };
 
@@ -88,13 +88,14 @@ describe('PlaylistsService', () => {
     ).rejects.toBeInstanceOf(NotFoundException);
   });
 
-  it('delegates uploaded track ownership checks before adding a track', async () => {
-    const { playlistsRepository, service, tracksService } = createService();
+  it('delegates uploaded track ownership checks before creating an item', async () => {
+    const { playlistsRepository, service, uploadedTracksService } =
+      createService();
 
     playlistsRepository.findOwnedById
       .mockResolvedValueOnce(playlist)
       .mockResolvedValueOnce(playlist);
-    tracksService.findOwnedTrack.mockResolvedValue({
+    uploadedTracksService.findOwnedUploadedTrack.mockResolvedValue({
       id: 'uploaded-1',
       ownerId: 'user-1',
       title: 'Upload',
@@ -107,16 +108,16 @@ describe('PlaylistsService', () => {
       updatedAt,
     });
 
-    await service.addTrack('user-1', 'playlist-1', {
+    await service.createItem('user-1', 'playlist-1', {
       source: 'uploaded',
       sourceId: 'uploaded-1',
     });
 
-    expect(tracksService.findOwnedTrack).toHaveBeenCalledWith(
+    expect(uploadedTracksService.findOwnedUploadedTrack).toHaveBeenCalledWith(
       'user-1',
       'uploaded-1',
     );
-    expect(playlistsRepository.addTrack).toHaveBeenCalledWith('playlist-1', {
+    expect(playlistsRepository.addItem).toHaveBeenCalledWith('playlist-1', {
       source: TrackSource.UPLOADED,
       sourceId: 'uploaded-1',
       title: 'Upload',
@@ -126,35 +127,35 @@ describe('PlaylistsService', () => {
     });
   });
 
-  it('rejects reorder payloads with duplicate track IDs', async () => {
+  it('rejects reorder payloads with duplicate playlist item IDs', async () => {
     const { playlistsRepository, service } = createService();
 
     playlistsRepository.findOwnedById.mockResolvedValue(playlist);
 
     await expect(
-      service.reorderTracks('user-1', 'playlist-1', {
-        trackIds: ['track-1', 'track-1'],
+      service.reorderItems('user-1', 'playlist-1', {
+        playlistItemIds: ['track-1', 'track-1'],
       }),
     ).rejects.toBeInstanceOf(BadRequestException);
 
-    expect(playlistsRepository.reorderTracks).not.toHaveBeenCalled();
+    expect(playlistsRepository.reorderItems).not.toHaveBeenCalled();
   });
 
-  it('rejects reorder payloads that do not match every playlist track', async () => {
+  it('rejects reorder payloads that do not match every playlist item', async () => {
     const { playlistsRepository, service } = createService();
 
     playlistsRepository.findOwnedById.mockResolvedValue(playlist);
 
     await expect(
-      service.reorderTracks('user-1', 'playlist-1', {
-        trackIds: ['track-1', 'missing-track'],
+      service.reorderItems('user-1', 'playlist-1', {
+        playlistItemIds: ['track-1', 'missing-track'],
       }),
-    ).rejects.toThrow('Track IDs must match the playlist tracks');
+    ).rejects.toThrow('Playlist item IDs must match the playlist items');
 
-    expect(playlistsRepository.reorderTracks).not.toHaveBeenCalled();
+    expect(playlistsRepository.reorderItems).not.toHaveBeenCalled();
   });
 
-  it('reorders tracks and returns the updated playlist detail', async () => {
+  it('reorders items and returns the updated playlist detail', async () => {
     const { playlistsRepository, service } = createService();
     const reordered = {
       ...playlist,
@@ -166,17 +167,17 @@ describe('PlaylistsService', () => {
       .mockResolvedValueOnce(reordered);
 
     await expect(
-      service.reorderTracks('user-1', 'playlist-1', {
-        trackIds: ['track-2', 'track-1'],
+      service.reorderItems('user-1', 'playlist-1', {
+        playlistItemIds: ['track-2', 'track-1'],
       }),
     ).resolves.toMatchObject({
       id: 'playlist-1',
-      trackCount: 2,
+      itemCount: 2,
       totalDuration: 300,
-      tracks: [{ id: 'track-2' }, { id: 'track-1' }],
+      items: [{ id: 'track-2' }, { id: 'track-1' }],
     });
 
-    expect(playlistsRepository.reorderTracks).toHaveBeenCalledWith(
+    expect(playlistsRepository.reorderItems).toHaveBeenCalledWith(
       'playlist-1',
       ['track-2', 'track-1'],
     );

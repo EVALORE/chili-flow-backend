@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { RecentlyPlayedRepository } from './recently-played.repository';
-import { TracksService } from '../tracks/tracks.service';
+import { UploadedTracksService } from '../uploaded-tracks/uploaded-tracks.service';
 import { JamendoService } from '../jamendo/jamendo.service';
 import { CreateRecentlyPlayedDto } from './dto/create-recently-played.dto';
 import { TrackSource } from '../../prisma/generated/enums';
@@ -15,13 +15,13 @@ import { RecentlyPlayedQueryDto } from './dto/recently-played-query.dto';
 export class RecentlyPlayedService {
   constructor(
     private readonly recentlyPlayedRepository: RecentlyPlayedRepository,
-    private readonly tracksService: TracksService,
+    private readonly uploadedTracksService: UploadedTracksService,
     private readonly jamendoService: JamendoService,
   ) {}
 
   async create(ownerId: string, dto: CreateRecentlyPlayedDto) {
     if (dto.source === 'uploaded') {
-      const track = await this.tracksService.findOwnedTrack(
+      const track = await this.uploadedTracksService.findOwnedUploadedTrack(
         ownerId,
         dto.sourceId,
       );

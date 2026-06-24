@@ -30,8 +30,11 @@ export class PlaylistSummaryResponseDto {
   @ApiPropertyOptional({ example: 'Songs for the road', nullable: true })
   description!: string | null;
 
-  @ApiProperty({ example: 12 })
-  trackCount!: number;
+  @ApiProperty({
+    example: 12,
+    description: 'Number of playlist item rows in this playlist.',
+  })
+  itemCount!: number;
 
   @ApiProperty({ example: 2568 })
   totalDuration!: number;
@@ -43,17 +46,30 @@ export class PlaylistSummaryResponseDto {
   updatedAt!: Date;
 }
 
-export class PlaylistTrackResponseDto {
-  @ApiProperty({ example: '7d2e1fd7-3e0b-43a3-8db7-2f6e25783e3f' })
+export class PlaylistItemResponseDto {
+  @ApiProperty({
+    example: '7d2e1fd7-3e0b-43a3-8db7-2f6e25783e3f',
+    description:
+      'Playlist item row ID. Use this ID for delete and reorder operations.',
+  })
   id!: string;
 
   @ApiProperty({ example: '7d2e1fd7-3e0b-43a3-8db7-2f6e25783e3f' })
   playlistId!: string;
 
-  @ApiProperty({ enum: ['jamendo', 'uploaded'], example: 'jamendo' })
+  @ApiProperty({
+    enum: ['jamendo', 'uploaded'],
+    example: 'jamendo',
+    description:
+      'Backing source type for this playlist item snapshot. Jamendo is an external catalog track; uploaded is a local uploaded track.',
+  })
   source!: 'jamendo' | 'uploaded';
 
-  @ApiProperty({ example: '123456' })
+  @ApiProperty({
+    example: '123456',
+    description:
+      'Backing source ID used when the item was created. This is not the playlist item ID.',
+  })
   sourceId!: string;
 
   @ApiProperty({ example: 'Night Drive' })
@@ -85,12 +101,15 @@ export class PlaylistTrackResponseDto {
 }
 
 export class PlaylistDetailResponseDto extends PlaylistResponseDto {
-  @ApiProperty({ example: 12 })
-  trackCount!: number;
+  @ApiProperty({
+    example: 12,
+    description: 'Number of playlist item rows in this playlist.',
+  })
+  itemCount!: number;
 
   @ApiProperty({ example: 2568 })
   totalDuration!: number;
 
-  @ApiProperty({ type: [PlaylistTrackResponseDto] })
-  tracks!: PlaylistTrackResponseDto[];
+  @ApiProperty({ type: [PlaylistItemResponseDto] })
+  items!: PlaylistItemResponseDto[];
 }

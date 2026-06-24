@@ -10,35 +10,46 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { TracksService } from './tracks.service';
+import { UploadedTracksService } from './uploaded-tracks.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { audioFileFilter } from './storage/audio-file.storage';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../common/types/authenticated-user.type';
-import { UploadTrackDto } from './dto/upload-track.dto';
+import { CreateUploadedTrackDto } from './dto/create-uploaded-track.dto';
 import {
   ApiBearerAuth,
+  ApiCookieAuth,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { UploadedTrackResponseDto } from './dto/uploaded-track-response.dto';
 import { DeleteResponseDto } from '../common/dto/delete-response.dto';
 
-@ApiTags('tracks')
+@ApiTags('uploaded tracks')
 @ApiBearerAuth('bearer')
-@Controller('tracks')
+@ApiCookieAuth('chili_flow_session')
+@Controller('uploaded-tracks')
 @UseGuards(JwtAuthGuard)
-export class TracksController {
-  constructor(private readonly tracksService: TracksService) {}
+export class UploadedTracksController {
+  constructor(private readonly uploadedTracksService: UploadedTracksService) {}
 
-  @Post('upload')
+  @Post()
+  @ApiOperation({
+    summary: 'Create an uploaded track',
+    description:
+      'Creates a local uploaded track owned by the authenticated user. This endpoint accepts multipart form data and stores the audio file locally.',
+  })
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ type: UploadedTrackResponseDto })
   @ApiBody({
+    description:
+      'Uploaded track metadata and the audio file to store for the authenticated user.',
     schema: {
       type: 'object',
       required: ['title', 'artist', 'file'],
@@ -60,23 +71,40 @@ export class TracksController {
       limits: { fileSize: 25 * 1024 * 1024 },
     }),
   )
-  upload(
+  create(
     @CurrentUser() user: AuthenticatedUser,
-    @Body() dto: UploadTrackDto,
+    @Body() dto: CreateUploadedTrackDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.tracksService.upload(user.id, dto, file);
+    return this.uploadedTracksService.create(user.id, dto, file);
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'List uploaded tracks',
+    description:
+      'Returns local uploaded tracks owned by the authenticated user only.',
+  })
   @ApiOkResponse({ type: UploadedTrackResponseDto, isArray: true })
   list(@CurrentUser() user: AuthenticatedUser) {
-    return this.tracksService.list(user.id);
+    return this.uploadedTracksService.list(user.id);
   }
 
-  @Delete(':id')
+  @Delete(':uploadedTrackId')
+  @ApiOperation({
+    summary: 'Delete an uploaded track',
+    description:
+      'Deletes one local uploaded track owned by the authenticated user. The uploadedTrackId path parameter is the local uploaded-track ID.',
+  })
+  @ApiParam({
+    name: 'uploadedTrackId',
+    description: 'Local uploaded-track ID, not a Jamendo catalog track ID.',
+  })
   @ApiOkResponse({ type: DeleteResponseDto })
-  delete(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
-    return this.tracksService.delete(user.id, id);
+  delete(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('uploadedTrackId') uploadedTrackId: string,
+  ) {
+    return this.uploadedTracksService.delete(user.id, uploadedTrackId);
   }
 }

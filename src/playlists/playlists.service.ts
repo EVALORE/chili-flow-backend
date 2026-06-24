@@ -4,19 +4,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PlaylistsRepository } from './playlists.repository';
-import { TracksService } from '../tracks/tracks.service';
+import { UploadedTracksService } from '../uploaded-tracks/uploaded-tracks.service';
 import { JamendoService } from '../jamendo/jamendo.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { TrackSource } from '../../prisma/generated/enums';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
-import { AddPlaylistTrackDto } from './dto/add-playlist-track.dto';
-import { ReorderPlaylistTracksDto } from './dto/reorder-playlist-tracks.dto';
+import { CreatePlaylistItemDto } from './dto/create-playlist-item.dto';
+import { ReorderPlaylistItemsDto } from './dto/reorder-playlist-items.dto';
 
 @Injectable()
 export class PlaylistsService {
   constructor(
     private readonly playlistsRepository: PlaylistsRepository,
-    private readonly tracksService: TracksService,
+    private readonly uploadedTracksService: UploadedTracksService,
     private readonly jamendoService: JamendoService,
   ) {}
 
@@ -27,7 +27,7 @@ export class PlaylistsService {
       id: playlist.id,
       name: playlist.name,
       description: playlist.description,
-      trackCount: playlist.tracks.length,
+      itemCount: playlist.tracks.length,
       totalDuration: playlist.tracks.reduce(
         (sum, track) => sum + (track.duration ?? 0),
         0,
@@ -46,15 +46,16 @@ export class PlaylistsService {
 
   async findOne(ownerId: string, id: string) {
     const playlist = await this._findOwnedPlaylist(ownerId, id);
+    const { tracks, ...playlistFields } = playlist;
 
     return {
-      ...playlist,
-      trackCount: playlist.tracks.length,
-      totalDuration: playlist.tracks.reduce(
+      ...playlistFields,
+      itemCount: tracks.length,
+      totalDuration: tracks.reduce(
         (sum, track) => sum + (track.duration ?? 0),
         0,
       ),
-      tracks: playlist.tracks.map((track) => ({
+      items: tracks.map((track) => ({
         ...track,
         source: track.source === TrackSource.JAMENDO ? 'jamendo' : 'uploaded',
       })),
@@ -76,20 +77,20 @@ export class PlaylistsService {
     return { deleted: true };
   }
 
-  async addTrack(
+  async createItem(
     ownerId: string,
     playlistId: string,
-    dto: AddPlaylistTrackDto,
+    dto: CreatePlaylistItemDto,
   ) {
     const playlist = await this._findOwnedPlaylist(ownerId, playlistId);
 
     if (dto.source === 'uploaded') {
-      const track = await this.tracksService.findOwnedTrack(
+      const track = await this.uploadedTracksService.findOwnedUploadedTrack(
         ownerId,
         dto.sourceId,
       );
 
-      await this.playlistsRepository.addTrack(playlist.id, {
+      await this.playlistsRepository.addItem(playlist.id, {
         source: TrackSource.UPLOADED,
         sourceId: track.id,
         title: track.title,
@@ -104,7 +105,7 @@ export class PlaylistsService {
         throw new NotFoundException('Jamendo track not found');
       }
 
-      await this.playlistsRepository.addTrack(playlist.id, {
+      await this.playlistsRepository.addItem(playlist.id, {
         source: TrackSource.JAMENDO,
         sourceId: track.sourceId,
         title: track.title,
@@ -118,41 +119,50 @@ export class PlaylistsService {
     return this.findOne(ownerId, playlist.id);
   }
 
-  async removeTrack(ownerId: string, playlistId: string, trackId: string) {
+  async removeItem(
+    ownerId: string,
+    playlistId: string,
+    playlistItemId: string,
+  ) {
     const playlist = await this._findOwnedPlaylist(ownerId, playlistId);
-    const removed = await this.playlistsRepository.removeTrack(
+    const removed = await this.playlistsRepository.removeItem(
       playlist.id,
-      trackId,
+      playlistItemId,
     );
 
     if (!removed) {
-      throw new NotFoundException('Playlist track not found');
+      throw new NotFoundException('Playlist item not found');
     }
 
     return this.findOne(ownerId, playlist.id);
   }
 
-  async reorderTracks(
+  async reorderItems(
     ownerId: string,
     playlistId: string,
-    dto: ReorderPlaylistTracksDto,
+    dto: ReorderPlaylistItemsDto,
   ) {
     const playlist = await this._findOwnedPlaylist(ownerId, playlistId);
     const currentIds = playlist.tracks.map((track) => track.id);
-    const submittedIds = new Set(dto.trackIds);
+    const submittedIds = new Set(dto.playlistItemIds);
 
-    if (submittedIds.size !== dto.trackIds.length) {
-      throw new BadRequestException('Track IDs must be unique');
+    if (submittedIds.size !== dto.playlistItemIds.length) {
+      throw new BadRequestException('Playlist item IDs must be unique');
     }
 
     if (
-      currentIds.length !== dto.trackIds.length ||
+      currentIds.length !== dto.playlistItemIds.length ||
       currentIds.some((id) => !submittedIds.has(id))
     ) {
-      throw new BadRequestException('Track IDs must match the playlist tracks');
+      throw new BadRequestException(
+        'Playlist item IDs must match the playlist items',
+      );
     }
 
-    await this.playlistsRepository.reorderTracks(playlist.id, dto.trackIds);
+    await this.playlistsRepository.reorderItems(
+      playlist.id,
+      dto.playlistItemIds,
+    );
 
     return this.findOne(ownerId, playlist.id);
   }

@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { TrackSource } from '../../prisma/generated/enums';
 import { JamendoService } from '../jamendo/jamendo.service';
-import { TracksService } from '../tracks/tracks.service';
+import { UploadedTracksService } from '../uploaded-tracks/uploaded-tracks.service';
 import { RecentlyPlayedRepository } from './recently-played.repository';
 import { RecentlyPlayedService } from './recently-played.service';
 
@@ -14,9 +14,9 @@ describe('RecentlyPlayedService', () => {
       findManyByOwner: jest.fn(),
     } as unknown as jest.Mocked<RecentlyPlayedRepository>;
 
-    const tracksService = {
-      findOwnedTrack: jest.fn(),
-    } as unknown as jest.Mocked<TracksService>;
+    const uploadedTracksService = {
+      findOwnedUploadedTrack: jest.fn(),
+    } as unknown as jest.Mocked<UploadedTracksService>;
 
     const jamendoService = {
       findTrack: jest.fn(),
@@ -26,10 +26,10 @@ describe('RecentlyPlayedService', () => {
       recentlyPlayedRepository,
       service: new RecentlyPlayedService(
         recentlyPlayedRepository,
-        tracksService,
+        uploadedTracksService,
         jamendoService,
       ),
-      tracksService,
+      uploadedTracksService,
     };
   };
 
@@ -99,10 +99,10 @@ describe('RecentlyPlayedService', () => {
   });
 
   it('uses the uploaded track ownership check when saving uploaded history', async () => {
-    const { recentlyPlayedRepository, service, tracksService } =
+    const { recentlyPlayedRepository, service, uploadedTracksService } =
       createService();
 
-    tracksService.findOwnedTrack.mockResolvedValue({
+    uploadedTracksService.findOwnedUploadedTrack.mockResolvedValue({
       id: 'uploaded-1',
       ownerId: 'user-1',
       title: 'Upload',
@@ -125,7 +125,7 @@ describe('RecentlyPlayedService', () => {
       sourceId: 'uploaded-1',
     });
 
-    expect(tracksService.findOwnedTrack).toHaveBeenCalledWith(
+    expect(uploadedTracksService.findOwnedUploadedTrack).toHaveBeenCalledWith(
       'user-1',
       'uploaded-1',
     );

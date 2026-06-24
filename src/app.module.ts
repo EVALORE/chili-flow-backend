@@ -6,7 +6,7 @@ import { JamendoModule } from './jamendo/jamendo.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
-import { TracksModule } from './tracks/tracks.module';
+import { UploadedTracksModule } from './uploaded-tracks/uploaded-tracks.module';
 import { PlaylistsModule } from './playlists/playlists.module';
 import { RecentlyPlayedModule } from './recently-played/recently-played.module';
 import { CatalogModule } from './catalog/catalog.module';
@@ -22,7 +22,7 @@ import { CatalogModule } from './catalog/catalog.module';
     JamendoModule,
     AuthModule,
     HealthModule,
-    TracksModule,
+    UploadedTracksModule,
     PlaylistsModule,
     RecentlyPlayedModule,
     CatalogModule,

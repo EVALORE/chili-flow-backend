@@ -7,20 +7,28 @@ import { CreateRecentlyPlayedDto } from './dto/create-recently-played.dto';
 import { RecentlyPlayedQueryDto } from './dto/recently-played-query.dto';
 import {
   ApiBearerAuth,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { RecentlyPlayedResponseDto } from './dto/recently-played-response.dto';
 
 @ApiTags('recently-played')
 @ApiBearerAuth('bearer')
+@ApiCookieAuth('chili_flow_session')
 @Controller('recently-played')
 @UseGuards(JwtAuthGuard)
 export class RecentlyPlayedController {
   constructor(private readonly recentlyPlayedService: RecentlyPlayedService) {}
 
   @Post()
+  @ApiOperation({
+    summary: 'Create recently played item',
+    description:
+      'Creates a local playback history snapshot for the authenticated user. sourceId is accepted here to identify the backing Jamendo catalog track or local uploaded track.',
+  })
   @ApiCreatedResponse({ type: RecentlyPlayedResponseDto })
   create(
     @CurrentUser() user: AuthenticatedUser,
@@ -30,6 +38,11 @@ export class RecentlyPlayedController {
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'List recently played items',
+    description:
+      'Returns playback history snapshots owned by the authenticated user.',
+  })
   @ApiOkResponse({ type: RecentlyPlayedResponseDto, isArray: true })
   list(
     @CurrentUser() user: AuthenticatedUser,

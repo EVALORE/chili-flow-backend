@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class UploadTrackDto {
+export class CreateUploadedTrackDto {
   @ApiProperty({ example: 'Night Drive', maxLength: 160 })
   @IsString()
   @IsNotEmpty()

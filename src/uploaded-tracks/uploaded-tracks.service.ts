@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { TracksRepository } from './tracks.repository';
-import { UploadTrackDto } from './dto/upload-track.dto';
+import { UploadedTracksRepository } from './uploaded-tracks.repository';
+import { CreateUploadedTrackDto } from './dto/create-uploaded-track.dto';
 import { join, resolve } from 'node:path';
 import { unlink, mkdir, writeFile } from 'node:fs/promises';
 import { URL } from 'node:url';
@@ -15,17 +15,17 @@ import { UploadedTrackResponseDto } from './dto/uploaded-track-response.dto';
 import type { UploadedTrackModel } from '../../prisma/generated/models';
 
 @Injectable()
-export class TracksService {
-  private readonly logger = new Logger(TracksService.name);
+export class UploadedTracksService {
+  private readonly logger = new Logger(UploadedTracksService.name);
 
   constructor(
-    private readonly tracksRepository: TracksRepository,
+    private readonly uploadedTracksRepository: UploadedTracksRepository,
     private readonly configService: ConfigService,
   ) {}
 
-  async upload(
+  async create(
     ownerId: string,
-    dto: UploadTrackDto,
+    dto: CreateUploadedTrackDto,
     file?: Express.Multer.File,
   ) {
     if (!file) {
@@ -47,7 +47,7 @@ export class TracksService {
     await writeFile(filePath, file.buffer);
 
     try {
-      const track = await this.tracksRepository.create({
+      const track = await this.uploadedTracksRepository.create({
         ownerId,
         title: dto.title.trim(),
         artist: dto.artist.trim(),
@@ -64,28 +64,34 @@ export class TracksService {
   }
 
   async list(ownerId: string) {
-    const tracks = await this.tracksRepository.findManyByOwner(ownerId);
+    const tracks = await this.uploadedTracksRepository.findManyByOwner(ownerId);
     return tracks.map((track) => this._toResponse(track));
   }
 
   async delete(ownerId: string, id: string) {
-    const track = await this.tracksRepository.findOwnedById(ownerId, id);
+    const track = await this.uploadedTracksRepository.findOwnedById(
+      ownerId,
+      id,
+    );
 
     if (!track) {
-      throw new NotFoundException('Track not found');
+      throw new NotFoundException('Uploaded track not found');
     }
 
-    await this.tracksRepository.deleteById(track.id);
+    await this.uploadedTracksRepository.deleteById(track.id);
     await this._deleteStoredFileBestEffort(track.filePath);
 
     return { deleted: true };
   }
 
-  async findOwnedTrack(ownerId: string, id: string) {
-    const track = await this.tracksRepository.findOwnedById(ownerId, id);
+  async findOwnedUploadedTrack(ownerId: string, id: string) {
+    const track = await this.uploadedTracksRepository.findOwnedById(
+      ownerId,
+      id,
+    );
 
     if (!track) {
-      throw new NotFoundException('Track not found');
+      throw new NotFoundException('Uploaded track not found');
     }
 
     return track;
