@@ -1,7 +1,45 @@
 services:
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres-db:5432/chili_flow?schema=public
+    command: ['pnpm', 'exec', 'prisma', 'migrate', 'deploy']
+    restart: 'no'
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres-db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      JWT_SECRET: replace-with-local-development-secret
+      AUTH_TRANSPORT: cookie
+      DATABASE_URL: postgresql://postgres:postgres@postgres-db:5432/chili_flow?schema=public
+      UPLOADS_DIR: /app/uploads
+      PUBLIC_BACKEND_URL: http://localhost:3000
+      FRONTEND_ORIGIN: http://localhost:4200,http://127.0.0.1:4200,http://localhost:5173,http://127.0.0.1:5173
+      JAMENDO_CLIENT_ID: replace-with-jamendo-client-id
+      JAMENDO_API_BASE_URL: https://api.jamendo.com/v3.0
+    ports:
+      - '3000:3000'
+    volumes:
+      - uploads_data:/app/uploads
+
   postgres-db:
-    image: postgres:latest
-    container_name: chili-flow-postgres
+    image: postgres:17
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: postgres
@@ -9,7 +47,13 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql1
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d chili_flow']
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   postgres_data:
+  uploads_data:
